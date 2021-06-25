@@ -21,7 +21,7 @@ interface IRequestParams {
 export class Connector {
   private baseUrl = 'https://eth-mainnet.alchemyapi.io/v2/';
 
-  constructor(private apiKey: string, private userAddress: string) {}
+  constructor(private apiKey: string, private userAddress?: string) {}
 
   public async fetchTokenLogo(
     tokenAddress: string,
@@ -34,9 +34,12 @@ export class Connector {
 
   public convertTokenLogo(
     tokenLogo: IAlchemyTokenLogo,
-    address: string,
+    tokenAddress: string,
   ): ConnectorTokenLogo {
-    return AlchemyTokenLogoFactory.toConnectorTokenLogo(tokenLogo, address);
+    return AlchemyTokenLogoFactory.toConnectorTokenLogo(
+      tokenLogo,
+      tokenAddress,
+    );
   }
 
   public async fetchTokenBalance(

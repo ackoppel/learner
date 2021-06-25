@@ -5,6 +5,7 @@ import {
   Request,
   Body,
   Get,
+  Post,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { JwtGuard } from '../auth/jwtGuard';
@@ -12,6 +13,7 @@ import { IRequest } from '../auth/interface/request';
 import { UpdateProfileRequestDto } from './dto/updateProfileRequest.dto';
 import { ProfileResponseDto } from './dto/profileResponse.dto';
 import { plainToClass } from 'class-transformer';
+import { AddAddressDto } from '../token/dto/addAddress.dto';
 
 @Controller('profile')
 export class ProfileController {
@@ -38,4 +40,11 @@ export class ProfileController {
     );
     return plainToClass(ProfileResponseDto, updated);
   }
+
+  @Post('address')
+  @UseGuards(JwtGuard)
+  async addEthAddress(
+    @Body() addAddressDto: AddAddressDto,
+    @Request() req: IRequest,
+  ) {}
 }
