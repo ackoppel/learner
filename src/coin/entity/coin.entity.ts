@@ -12,6 +12,9 @@ export class Coin {
   @Column()
   priceUsd: string;
 
+  @Column()
+  decimals: number;
+
   @Column({ type: 'timestamp', nullable: true })
   lastSync: Date;
 }

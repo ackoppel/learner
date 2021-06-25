@@ -9,6 +9,7 @@ export class CoinRepository extends Repository<Coin> {
       name: data.chain,
       priceUsd: data.priceUsd,
       lastSync: new Date(),
+      decimals: data.decimals,
     });
     const existingModel = await this.findOne({
       name: model.name,

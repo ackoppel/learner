@@ -20,6 +20,7 @@ export class UniswapPriceFactory {
     const model = new ConnectorCoinPrice();
     model.chain = Chain.ETH;
     model.priceUsd = ethPrice.bundle.ethPrice;
+    model.decimals = 18;
     return model;
   }
 }

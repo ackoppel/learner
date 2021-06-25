@@ -27,4 +27,7 @@ export class Address {
 
   @Column()
   coinBalance: string;
+
+  @Column({ type: 'timestamp' })
+  lastSync: Date;
 }

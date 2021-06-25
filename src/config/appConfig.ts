@@ -14,4 +14,7 @@ export const appConfig = () => ({
   alchemy: {
     key: process.env.ALCHEMY_API_KEY,
   },
+  etherScan: {
+    key: process.env.ETHERSCAN_API_KEY,
+  },
 });

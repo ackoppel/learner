@@ -14,6 +14,7 @@ import { UpdateProfileRequestDto } from './dto/updateProfileRequest.dto';
 import { ProfileResponseDto } from './dto/profileResponse.dto';
 import { plainToClass } from 'class-transformer';
 import { AddAddressDto } from '../token/dto/addAddress.dto';
+import { AddAddressResponseDto } from '../token/dto/addAddressResponse.dto';
 
 @Controller('profile')
 export class ProfileController {
@@ -46,5 +47,13 @@ export class ProfileController {
   async addEthAddress(
     @Body() addAddressDto: AddAddressDto,
     @Request() req: IRequest,
-  ) {}
+  ): Promise<AddAddressResponseDto> {
+    return plainToClass(
+      AddAddressResponseDto,
+      await this.profileService.addAddress(
+        addAddressDto,
+        req.user.getAuthCredentialsId(),
+      ),
+    );
+  }
 }
