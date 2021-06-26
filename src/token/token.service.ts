@@ -9,13 +9,19 @@ import { ConfigService } from '@nestjs/config';
 import { ProfileService } from '../profile/profile.service';
 import { Chain } from '../coin/enum/chain';
 import { Token } from './entity/token.entity';
+import { Address } from '../profile/enitity/address/address.entity';
+import { TokenBalanceRepository } from '../profile/enitity/tokenBalance/tokenBalance.repository';
+import { CoinService } from '../coin/coin.service';
 
 @Injectable()
 export class TokenService {
   constructor(
     @InjectRepository(TokenRepository)
     private tokenRepository: TokenRepository,
+    @InjectRepository(TokenBalanceRepository)
+    private tokenBalanceRepository: TokenBalanceRepository,
     private profileService: ProfileService,
+    private coinService: CoinService,
     private configService: ConfigService,
   ) {}
 
@@ -23,10 +29,17 @@ export class TokenService {
     createTokenDto: CreateTokenDto,
     authCredentialsId: string,
   ): Promise<Token> {
-    await this.checkAddressList(authCredentialsId, Chain.ETH);
-    const { tokenAddress } = createTokenDto;
-    const token = await this.getUniswapTokenDetails(tokenAddress);
-    return this.tokenRepository.createToken(token);
+    const address = await this.checkAddress(
+      authCredentialsId,
+      createTokenDto.userAddress,
+      Chain.ETH,
+    );
+    const token = await this.tokenRepository.createOrUpdateToken(
+      await this.getUniswapTokenDetails(createTokenDto.tokenAddress),
+      await this.coinService.getCoin(Chain.ETH),
+    );
+    await this.insertUniswapTokenBalance(address, token);
+    return token;
   }
 
   private async getUniswapTokenDetails(
@@ -55,16 +68,39 @@ export class TokenService {
     return tokenModel;
   }
 
-  private async checkAddressList(authCredentialsId: string, chain: Chain) {
-    const hasAddresses = await this.profileService.hasAddresses(
+  async insertUniswapTokenBalance(
+    address: Address,
+    token: Token,
+  ): Promise<void> {
+    const apiConnector = new AlchemyConnector(
+      this.configService.get<string>('alchemy.key'),
+      address.contractAddress,
+    );
+    const tokenBalanceData = await apiConnector.fetchTokenBalance(
+      token.address,
+    );
+    await this.tokenBalanceRepository.createOrUpdateBalance(
+      address,
+      token,
+      apiConnector.convertTokenBalance(tokenBalanceData),
+    );
+  }
+
+  private async checkAddress(
+    authCredentialsId: string,
+    userAddress: string,
+    chain: Chain,
+  ): Promise<Address> {
+    const address = await this.profileService.getAddress(
       authCredentialsId,
+      userAddress,
       chain,
     );
-    if (!hasAddresses) {
+    if (!address) {
       throw new BadRequestException(
-        'You must add atleast one ethereum address to create tokens',
+        `You must add ${chain} address "${userAddress}" to create tokens`,
       );
     }
-    return;
+    return address;
   }
 }

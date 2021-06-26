@@ -7,6 +7,7 @@ import { AuthModule } from '../auth/auth.module';
 import { AddressRepository } from './enitity/address/address.repository';
 import { TokenBalanceRepository } from './enitity/tokenBalance/tokenBalance.repository';
 import { ConfigModule } from '@nestjs/config';
+import { CoinModule } from '../coin/coin.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule } from '@nestjs/config';
       TokenBalanceRepository,
     ]),
     forwardRef(() => AuthModule),
+    CoinModule,
     ConfigModule,
   ],
   providers: [ProfileService],

@@ -3,10 +3,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Chain } from '../../../coin/enum/chain';
 import { Profile } from '../profile/profile.entity';
+import { TokenBalance } from '../tokenBalance/tokenBalance.entity';
+import { Coin } from '../../../coin/entity/coin.entity';
 
 @Entity()
 export class Address {
@@ -22,12 +24,15 @@ export class Address {
   @JoinColumn({ name: 'profileId' })
   profile: Profile;
 
-  @Column({ type: 'enum', enum: Chain })
-  chain: Chain;
+  @ManyToOne(() => Coin, (coin) => coin.addressList, { eager: true })
+  coin: Coin;
 
   @Column()
   coinBalance: string;
 
   @Column({ type: 'timestamp' })
   lastSync: Date;
+
+  @OneToMany(() => TokenBalance, (tokenBalance) => tokenBalance.address)
+  tokenBalances: TokenBalance[];
 }

@@ -2,7 +2,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import axios from 'axios';
 import { IEtherscanEthBalance } from './ethBalance/etherscanEthBalance.interface';
 import { ConnectorCoinBalance } from '../model/coinBalance.connector';
-import { EtherScanBalanceFactory } from './ethBalance/etherScanBalance.factory';
+import { EtherScanBalanceFactory } from './ethBalance/etherscanEthBalance.factory';
 
 enum Module {
   account = 'account',

@@ -4,22 +4,22 @@ import { GenderType } from '../enum/gender';
 @Exclude()
 export class ProfileResponseDto {
   @Expose()
-  @Transform(({ value, key, obj, type }) => obj.authCredentials.id)
+  @Transform(({ obj }) => obj.authCredentials.id)
   naturalId: string;
 
   @Expose()
-  @Transform(({ value, key, obj, type }) => obj.authCredentials.username)
+  @Transform(({ obj }) => obj.authCredentials.username)
   username: string;
 
   @Expose()
-  @Transform(({ value, key, obj, type }) => obj.displayName)
+  @Transform(({ obj }) => obj.displayName)
   displayName: string;
 
   @Expose()
-  @Transform(({ value, key, obj, type }) => obj.gender)
+  @Transform(({ obj }) => obj.gender)
   gender: GenderType;
 
   @Expose()
-  @Transform(({ value, key, obj, type }) => obj.description)
+  @Transform(({ obj }) => obj.description)
   description: string;
 }

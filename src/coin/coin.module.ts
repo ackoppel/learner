@@ -8,5 +8,6 @@ import { CoinRepository } from './entity/coin.repository';
   imports: [TypeOrmModule.forFeature([CoinRepository])],
   providers: [CoinService],
   controllers: [CoinController],
+  exports: [CoinService],
 })
 export class CoinModule {}

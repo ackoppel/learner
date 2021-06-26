@@ -3,6 +3,8 @@ import { CoinRepository } from './entity/coin.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 // todo :: remove after cron creation
 import { Connector as UniswapConnector } from '../externalApi/uniswap/connector';
+import { Chain } from './enum/chain';
+import { Coin } from './entity/coin.entity';
 
 @Injectable()
 export class CoinService implements OnModuleInit {
@@ -21,5 +23,9 @@ export class CoinService implements OnModuleInit {
     const connector = new UniswapConnector();
     const result = await connector.fetchEthPriceInUsd();
     return connector.convertEthPrice(result);
+  }
+
+  async getCoin(chain: Chain): Promise<Coin> {
+    return this.coinRepository.findOne({ name: chain });
   }
 }

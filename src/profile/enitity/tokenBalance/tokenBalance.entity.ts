@@ -3,7 +3,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Token } from '../../../token/entity/token.entity';
@@ -19,7 +18,7 @@ export class TokenBalance {
   })
   token: Token;
 
-  @OneToOne(() => Address, {
+  @ManyToOne(() => Address, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
@@ -27,4 +26,7 @@ export class TokenBalance {
 
   @Column()
   balance: string;
+
+  @Column({ type: 'timestamp' })
+  lastSync: Date;
 }

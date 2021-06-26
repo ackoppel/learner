@@ -1,6 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { TokenBalance } from '../../profile/enitity/tokenBalance/tokenBalance.entity';
-import { Chain } from '../../coin/enum/chain';
+import { Coin } from '../../coin/entity/coin.entity';
 
 @Entity()
 export class Token {
@@ -19,8 +25,8 @@ export class Token {
   @Column()
   priceInCoin: string;
 
-  @Column({ type: 'enum', enum: Chain })
-  chain: Chain;
+  @ManyToOne(() => Coin, (coin) => coin, { eager: true })
+  coin: Coin;
 
   @Column()
   decimals: number;

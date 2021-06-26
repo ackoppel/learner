@@ -1,5 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
-import { Chain } from '../../coin/enum/chain';
+import { Exclude, Expose, Transform } from 'class-transformer';
 
 @Exclude()
 export class AddAddressResponseDto {
@@ -10,7 +9,8 @@ export class AddAddressResponseDto {
   contractAddress: string;
 
   @Expose()
-  chain: Chain;
+  @Transform(({ obj }) => obj.coin.name)
+  coin: string;
 
   @Expose()
   coinBalance: string;

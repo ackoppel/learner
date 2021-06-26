@@ -1,14 +1,27 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Token } from './token.entity';
 import { ConnectorTokenDetails } from '../../externalApi/model/tokenDetails.connector';
+import { Coin } from '../../coin/entity/coin.entity';
 
 @EntityRepository(Token)
 export class TokenRepository extends Repository<Token> {
-  async createToken(token: ConnectorTokenDetails): Promise<Token> {
-    const model = this.create({ ...token, lastSync: new Date() });
+  async createOrUpdateToken(
+    token: ConnectorTokenDetails,
+    coin: Coin,
+  ): Promise<Token> {
+    const model = this.create({
+      address: token.address,
+      name: token.name,
+      symbol: token.symbol,
+      priceInCoin: token.priceInCoin,
+      coin,
+      decimals: token.decimals,
+      logoUrl: token.logoUrl,
+      lastSync: new Date(),
+    });
     const existingModel = await this.findOne({
       address: model.address,
-      chain: model.chain,
+      coin,
     });
     if (existingModel) {
       const mergedModel = this.merge(existingModel, {

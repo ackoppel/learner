@@ -7,12 +7,13 @@ import { Profile } from './enitity/profile/profile.entity';
 import { AuthCredentialsRepository } from '../auth/auth-credentials.repository';
 import { AddressRepository } from './enitity/address/address.repository';
 import { Chain } from '../coin/enum/chain';
-import { AddAddressDto } from '../token/dto/addAddress.dto';
+import { AddAddressDto } from './dto/addAddress.dto';
 import { Address } from './enitity/address/address.entity';
 import { Connector as EtherscanConnector } from '../externalApi/etherscan/connector';
 import { ConfigService } from '@nestjs/config';
-import { EtherScanBalanceFactory } from '../externalApi/etherscan/ethBalance/etherScanBalance.factory';
+import { EtherScanBalanceFactory } from '../externalApi/etherscan/ethBalance/etherscanEthBalance.factory';
 import { ConnectorCoinBalance } from '../externalApi/model/coinBalance.connector';
+import { CoinService } from '../coin/coin.service';
 
 @Injectable()
 export class ProfileService {
@@ -23,6 +24,7 @@ export class ProfileService {
     private authCredentialRepository: AuthCredentialsRepository,
     @InjectRepository(AddressRepository)
     private addressRepository: AddressRepository,
+    private coinService: CoinService,
     private configService: ConfigService,
   ) {}
 
@@ -66,7 +68,11 @@ export class ProfileService {
     addAddressDto: AddAddressDto,
   ): Promise<Address> {
     const ethBalance = await this.getEthBalance(addAddressDto.address);
-    return this.addressRepository.insertOrUpdateAddress(ethBalance, profile);
+    return this.addressRepository.insertOrUpdateAddress(
+      ethBalance,
+      profile,
+      await this.coinService.getCoin(addAddressDto.chain),
+    );
   }
 
   private async getEthBalance(
@@ -87,12 +93,22 @@ export class ProfileService {
     );
   }
 
-  async hasAddresses(
-    authCredentialsId: string,
-    chain: Chain,
-  ): Promise<boolean> {
+  async getProfileAddressList(authCredentialsId: string): Promise<Address[]> {
     const profile = await this.getProfile(authCredentialsId);
-    const addressList = await this.addressRepository.find({ profile, chain });
-    return !!addressList.length;
+    return this.addressRepository.getProfileAddressList(profile);
+  }
+
+  async getAddress(
+    authCredentialsId: string,
+    contractAddress: string,
+    chain: Chain,
+  ): Promise<Address> {
+    const profile = await this.getProfile(authCredentialsId);
+    const coin = await this.coinService.getCoin(chain);
+    return this.addressRepository.findOne({
+      contractAddress,
+      profile,
+      coin,
+    });
   }
 }
