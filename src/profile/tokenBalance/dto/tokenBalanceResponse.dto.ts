@@ -48,7 +48,7 @@ export class TokenBalanceResponseDto {
       obj.token.coin.priceUsd,
     ),
   )
-  balanceValueUsd: string;
+  balanceValueUsd: number;
 
   @Expose()
   @Transform(({ obj }) => obj.lastSync)

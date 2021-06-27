@@ -16,10 +16,10 @@ export class TokenHelper {
     tokenDecimals: number,
     priceInCoin: string,
     coinPriceUsd: string,
-  ): string {
+  ): number {
     return (
       this.convertBalance(tokenBalance, tokenDecimals) *
       parseFloat(this.convertPrice(priceInCoin, coinPriceUsd))
-    ).toFixed(20);
+    );
   }
 }
