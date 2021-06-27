@@ -2,7 +2,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import axios from 'axios';
 import { IEtherscanEthBalance } from './ethBalance/etherscanEthBalance.interface';
 import { ConnectorCoinBalance } from '../model/coinBalance.connector';
-import { EtherScanBalanceFactory } from './ethBalance/etherscanEthBalance.factory';
+import { EtherscanBalanceFactory } from './ethBalance/etherscanEthBalance.factory';
 
 enum Module {
   account = 'account',
@@ -29,7 +29,7 @@ export class Connector {
     address: string,
     balance: IEtherscanEthBalance,
   ): ConnectorCoinBalance {
-    return EtherScanBalanceFactory.toConnectorCoinBalance(address, balance);
+    return EtherscanBalanceFactory.toConnectorCoinBalance(address, balance);
   }
 
   private async performRequest(endPoint: string) {

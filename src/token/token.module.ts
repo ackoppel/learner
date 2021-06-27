@@ -5,14 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TokenRepository } from './entity/token.repository';
 import { ConfigModule } from '@nestjs/config';
 import { ProfileModule } from '../profile/profile.module';
-import { TokenBalanceRepository } from '../profile/enitity/tokenBalance/tokenBalance.repository';
 import { CoinModule } from '../coin/coin.module';
+import { AddressModule } from '../profile/address/address.module';
 
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([TokenRepository, TokenBalanceRepository]),
+    TypeOrmModule.forFeature([TokenRepository]),
     ProfileModule,
+    AddressModule,
     CoinModule,
   ],
   providers: [TokenService],

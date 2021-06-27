@@ -1,7 +1,8 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
+import { TokenHelper } from '../../helper/tokenHelper/tokenHelper';
 
 @Exclude()
-export class CreateTokenResponseDto {
+export class TokenResponseDto {
   @Expose()
   id: string;
 
@@ -18,6 +19,9 @@ export class CreateTokenResponseDto {
   decimals: number;
 
   @Expose()
+  logoUrl: string;
+
+  @Expose()
   @Transform(({ obj }) => obj.coin.name)
   coin: string;
 
@@ -25,5 +29,11 @@ export class CreateTokenResponseDto {
   priceInCoin: string;
 
   @Expose()
-  logoUrl: string;
+  @Transform(({ obj }) =>
+    TokenHelper.convertPrice(obj.priceInCoin, obj.coin.priceUsd),
+  )
+  priceUsd: string;
+
+  @Expose()
+  lastSync: Date;
 }

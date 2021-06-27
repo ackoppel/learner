@@ -6,9 +6,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { GenderType } from '../../enum/gender';
-import { AuthCredentials } from '../../../auth/entity/auth-credentials.entity';
-import { Address } from '../address/address.entity';
+import { GenderType } from '../enum/gender';
+import { AuthCredentials } from '../../auth/entity/auth-credentials.entity';
+import { Address } from '../address/entity/address.entity';
 
 @Entity()
 export class Profile {

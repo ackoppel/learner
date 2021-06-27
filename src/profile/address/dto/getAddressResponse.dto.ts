@@ -1,8 +1,9 @@
 import { Exclude, Expose, Transform, Type } from 'class-transformer';
-import { TokenBalanceResponseDto } from './tokenBalanceResponse.dto';
+import { TokenBalanceResponseDto } from '../../tokenBalance/dto/tokenBalanceResponse.dto';
+import { TokenHelper } from '../../../helper/tokenHelper/tokenHelper';
 
 @Exclude()
-export class GetAddressListResponseDto {
+export class GetAddressResponseDto {
   @Expose()
   id: string;
 
@@ -10,7 +11,9 @@ export class GetAddressListResponseDto {
   contractAddress: string;
 
   @Expose()
-  @Transform(({ obj }) => parseInt(obj.coinBalance) / 10 ** obj.coin.decimals)
+  @Transform(({ obj }) =>
+    TokenHelper.convertBalance(obj.coinBalance, obj.coin.decimals),
+  )
   coinBalance: number;
 
   @Expose()
@@ -19,7 +22,7 @@ export class GetAddressListResponseDto {
 
   @Expose()
   @Transform(({ obj }) => parseFloat(obj.coin.priceUsd))
-  coinPriceUsd: number;
+  coinPriceUsd: string;
 
   @Expose()
   @Transform(({ obj }) => obj.coin.lastSync)

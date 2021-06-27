@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { TokenBalance } from '../../profile/enitity/tokenBalance/tokenBalance.entity';
+import { TokenBalance } from '../../profile/tokenBalance/entity/tokenBalance.entity';
 import { Coin } from '../../coin/entity/coin.entity';
 
 @Entity()

@@ -2,7 +2,7 @@ import { ConnectorCoinBalance } from 'src/externalApi/model/coinBalance.connecto
 import { IEtherscanEthBalance } from './etherscanEthBalance.interface';
 import { Chain } from '../../../coin/enum/chain';
 
-export class EtherScanBalanceFactory {
+export class EtherscanBalanceFactory {
   public static toConnectorCoinBalance(
     address: string,
     balance: IEtherscanEthBalance,

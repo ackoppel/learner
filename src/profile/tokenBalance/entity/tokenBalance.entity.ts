@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Token } from '../../../token/entity/token.entity';
-import { Address } from '../address/address.entity';
+import { Address } from '../../address/entity/address.entity';
 
 @Entity()
 export class TokenBalance {

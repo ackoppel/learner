@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Address } from './address.entity';
-import { Profile } from '../profile/profile.entity';
+import { Profile } from '../../enitity/profile.entity';
 import { ConnectorCoinBalance } from '../../../externalApi/model/coinBalance.connector';
 import { Coin } from '../../../coin/entity/coin.entity';
 
@@ -34,12 +34,28 @@ export class AddressRepository extends Repository<Address> {
     }
   }
 
-  async getProfileAddressList(profile: Profile) {
+  // todo :: find a way to connect below two queries
+  async getProfileAddress(
+    profile: Profile,
+    coin: Coin,
+    contractAddress: string,
+  ): Promise<Address> {
+    return this.createQueryBuilder('a')
+      .where({ profile, coin, contractAddress })
+      .leftJoinAndSelect('a.coin', 'c')
+      .leftJoinAndSelect('a.tokenBalances', 'tb')
+      .leftJoinAndSelect('tb.token', 't')
+      .leftJoinAndSelect('t.coin', 'c2') // join to token for calculating value
+      .getOne();
+  }
+
+  async getProfileAddressList(profile: Profile): Promise<Address[]> {
     return this.createQueryBuilder('a')
       .where({ profile })
       .leftJoinAndSelect('a.coin', 'c')
       .leftJoinAndSelect('a.tokenBalances', 'tb')
       .leftJoinAndSelect('tb.token', 't')
+      .leftJoinAndSelect('t.coin', 'c2') // join to token for calculating value
       .getMany();
   }
 }

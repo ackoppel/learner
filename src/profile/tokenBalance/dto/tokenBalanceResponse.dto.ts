@@ -1,4 +1,5 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
+import { TokenHelper } from '../../../helper/tokenHelper/tokenHelper';
 
 @Exclude()
 export class TokenBalanceResponseDto {
@@ -23,12 +24,31 @@ export class TokenBalanceResponseDto {
   priceInCoin: string;
 
   @Expose()
+  @Transform(({ obj }) =>
+    TokenHelper.convertPrice(obj.token.priceInCoin, obj.token.coin.priceUsd),
+  )
+  priceUsd: string;
+
+  @Expose()
   @Transform(({ obj }) => obj.token.lastSync)
   lastPriceSync: Date;
 
   @Expose()
-  @Transform(({ obj }) => parseInt(obj.balance) / 10 ** obj.token.decimals)
-  balance: number;
+  @Transform(({ obj }) =>
+    TokenHelper.convertBalance(obj.balance, obj.token.decimals),
+  )
+  balanceConverted: number;
+
+  @Expose()
+  @Transform(({ obj }) =>
+    TokenHelper.convertBalanceToValueUsd(
+      obj.balance,
+      obj.token.decimals,
+      obj.token.priceInCoin,
+      obj.token.coin.priceUsd,
+    ),
+  )
+  balanceValueUsd: string;
 
   @Expose()
   @Transform(({ obj }) => obj.lastSync)

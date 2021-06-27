@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { TokenBalance } from './tokenBalance.entity';
-import { Address } from '../address/address.entity';
+import { Address } from '../../address/entity/address.entity';
 import { Token } from '../../../token/entity/token.entity';
 import { ConnectorTokenBalance } from '../../../externalApi/model/tokenBalance.connector';
 

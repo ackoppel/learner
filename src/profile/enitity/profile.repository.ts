@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Profile } from './profile.entity';
-import { AuthCredentials } from '../../../auth/entity/auth-credentials.entity';
-import { UpdateProfileRequestDto } from '../../dto/updateProfileRequest.dto';
+import { AuthCredentials } from '../../auth/entity/auth-credentials.entity';
+import { UpdateProfileRequestDto } from '../dto/updateProfileRequest.dto';
 
 @EntityRepository(Profile)
 export class ProfileRepository extends Repository<Profile> {

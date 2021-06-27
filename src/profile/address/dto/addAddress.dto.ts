@@ -1,5 +1,5 @@
 import { IsEnum, IsString } from 'class-validator';
-import { Chain } from '../../coin/enum/chain';
+import { Chain } from '../../../coin/enum/chain';
 
 export class AddAddressDto {
   @IsString()

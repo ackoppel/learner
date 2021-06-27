@@ -6,43 +6,45 @@ import { Connector as UniswapConnector } from '../externalApi/uniswap/connector'
 import { Connector as AlchemyConnector } from '../externalApi/alchemy/connector';
 import { ConnectorTokenDetails } from '../externalApi/model/tokenDetails.connector';
 import { ConfigService } from '@nestjs/config';
-import { ProfileService } from '../profile/profile.service';
 import { Chain } from '../coin/enum/chain';
 import { Token } from './entity/token.entity';
-import { Address } from '../profile/enitity/address/address.entity';
-import { TokenBalanceRepository } from '../profile/enitity/tokenBalance/tokenBalance.repository';
 import { CoinService } from '../coin/coin.service';
+import { TokenBalanceService } from '../profile/tokenBalance/tokenBalance.service';
+import { AddressService } from '../profile/address/address.service';
 
 @Injectable()
 export class TokenService {
   constructor(
     @InjectRepository(TokenRepository)
     private tokenRepository: TokenRepository,
-    @InjectRepository(TokenBalanceRepository)
-    private tokenBalanceRepository: TokenBalanceRepository,
-    private profileService: ProfileService,
+    private addressService: AddressService,
+    private tokenBalanceService: TokenBalanceService,
     private coinService: CoinService,
     private configService: ConfigService,
   ) {}
+
+  async getTokenList(): Promise<Token[]> {
+    return this.tokenRepository.find();
+  }
 
   async createUniswapToken(
     createTokenDto: CreateTokenDto,
     authCredentialsId: string,
   ): Promise<Token> {
-    const address = await this.checkAddress(
+    const address = await this.addressService.checkAddress(
       authCredentialsId,
       createTokenDto.userAddress,
       Chain.ETH,
     );
     const token = await this.tokenRepository.createOrUpdateToken(
-      await this.getUniswapTokenDetails(createTokenDto.tokenAddress),
+      await this.fetchUniswapTokenDetails(createTokenDto.tokenAddress),
       await this.coinService.getCoin(Chain.ETH),
     );
-    await this.insertUniswapTokenBalance(address, token);
+    await this.tokenBalanceService.fetchAndInsertTokenBalance(address, token);
     return token;
   }
 
-  private async getUniswapTokenDetails(
+  private async fetchUniswapTokenDetails(
     tokenAddress: string,
   ): Promise<ConnectorTokenDetails> {
     // token details
@@ -66,41 +68,5 @@ export class TokenService {
     const logoModel = alchemyConnector.convertTokenLogo(logoData, tokenAddress);
     tokenModel.logoUrl = logoModel.logoUrl;
     return tokenModel;
-  }
-
-  async insertUniswapTokenBalance(
-    address: Address,
-    token: Token,
-  ): Promise<void> {
-    const apiConnector = new AlchemyConnector(
-      this.configService.get<string>('alchemy.key'),
-      address.contractAddress,
-    );
-    const tokenBalanceData = await apiConnector.fetchTokenBalance(
-      token.address,
-    );
-    await this.tokenBalanceRepository.createOrUpdateBalance(
-      address,
-      token,
-      apiConnector.convertTokenBalance(tokenBalanceData),
-    );
-  }
-
-  private async checkAddress(
-    authCredentialsId: string,
-    userAddress: string,
-    chain: Chain,
-  ): Promise<Address> {
-    const address = await this.profileService.getAddress(
-      authCredentialsId,
-      userAddress,
-      chain,
-    );
-    if (!address) {
-      throw new BadRequestException(
-        `You must add ${chain} address "${userAddress}" to create tokens`,
-      );
-    }
-    return address;
   }
 }
