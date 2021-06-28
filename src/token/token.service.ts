@@ -11,7 +11,6 @@ import { Token } from './entity/token.entity';
 import { CoinService } from '../coin/coin.service';
 import { TokenBalanceService } from './tokenBalance/tokenBalance.service';
 import { AddressService } from '../coin/address/address.service';
-import { TokenBalance } from './tokenBalance/entity/tokenBalance.entity';
 
 @Injectable()
 export class TokenService {
@@ -31,7 +30,7 @@ export class TokenService {
   async addUniswapToken(
     createTokenDto: CreateTokenDto,
     authCredentialsId: string,
-  ): Promise<TokenBalance> {
+  ): Promise<Token> {
     const address = await this.addressService.checkAddress(
       authCredentialsId,
       createTokenDto.userAddress,
@@ -41,7 +40,8 @@ export class TokenService {
       await this.fetchUniswapTokenDetails(createTokenDto.tokenAddress),
       await this.coinService.getCoin(Chain.ETH),
     );
-    return this.tokenBalanceService.fetchAndInsertTokenBalance(address, token);
+    await this.tokenBalanceService.fetchAndInsertTokenBalance(address, token);
+    return token;
   }
 
   private async fetchUniswapTokenDetails(

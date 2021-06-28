@@ -4,7 +4,7 @@ import { JwtGuard } from '../../auth/jwtGuard';
 import { IRequest } from '../../auth/interface/request';
 import { plainToClass } from 'class-transformer';
 import { TokenBalanceResponseDto } from './dto/tokenBalanceResponse.dto';
-import { AddressChainParams } from '../../coin/dto/addressChain.params';
+import { GetTokenBalanceQuery } from './query/getTokenBalance.query';
 
 @Controller('token-balance')
 export class TokenBalanceController {
@@ -14,28 +14,30 @@ export class TokenBalanceController {
   @UseGuards(JwtGuard)
   async getUserAddressTokenBalance(
     @Request() req: IRequest,
-    @Query() query: AddressChainParams,
+    @Query() query: GetTokenBalanceQuery,
   ): Promise<TokenBalanceResponseDto[] | TokenBalanceResponseDto> {
-    // return a list of all token balances for the requested address
-    if (!query.tokenAddress) {
-      return plainToClass(
-        TokenBalanceResponseDto,
-        await this.tokenBalanceService.getUserAddressTokenBalanceList(
-          req.user.getAuthCredentialsId(),
-          query.userAddress,
-          query.chain,
-        ),
-      );
+    switch (true) {
+      case !query.tokenAddress:
+        // return a list of all token balances for the requested address
+        return plainToClass(
+          TokenBalanceResponseDto,
+          await this.tokenBalanceService.getUserAddressTokenBalanceList(
+            req.user.getAuthCredentialsId(),
+            query.userAddress,
+            query.chain,
+          ),
+        );
+      case !!query.tokenAddress:
+        // return the balance of the requested token only
+        return plainToClass(
+          TokenBalanceResponseDto,
+          await this.tokenBalanceService.getUserAddressTokenBalance(
+            req.user.getAuthCredentialsId(),
+            query.userAddress,
+            query.tokenAddress,
+            query.chain,
+          ),
+        );
     }
-    // return the balance of requested token only
-    return plainToClass(
-      TokenBalanceResponseDto,
-      await this.tokenBalanceService.getUserAddressTokenBalance(
-        req.user.getAuthCredentialsId(),
-        query.userAddress,
-        query.tokenAddress,
-        query.chain,
-      ),
-    );
   }
 }

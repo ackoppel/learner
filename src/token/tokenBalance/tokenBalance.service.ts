@@ -57,7 +57,10 @@ export class TokenBalanceService {
     });
   }
 
-  async fetchAndInsertTokenBalance(address: Address, token: Token) {
+  async fetchAndInsertTokenBalance(
+    address: Address,
+    token: Token,
+  ): Promise<TokenBalance> {
     return this.tokenBalanceRepository.createOrUpdateBalance(
       address,
       token,

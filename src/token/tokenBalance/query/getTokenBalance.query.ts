@@ -1,7 +1,7 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { Chain } from '../enum/chain';
+import { Chain } from '../../../coin/enum/chain';
 
-export class AddressChainParams {
+export class GetTokenBalanceQuery {
   @IsString()
   userAddress: string;
 

@@ -14,13 +14,13 @@ import { GetAddressResponseDto } from './dto/getAddressResponse.dto';
 import { plainToClass } from 'class-transformer';
 import { AddAddressDto } from './dto/addAddress.dto';
 import { AddAddressResponseDto } from './dto/addAddressResponse.dto';
-import { AddressChainParams } from '../dto/addressChain.params';
+import { GetAddressParams } from './params/getAddress.params';
 
 @Controller('address')
 export class AddressController {
   constructor(private addressService: AddressService) {}
 
-  @Get('/all')
+  @Get()
   @UseGuards(JwtGuard)
   async getUserAddressList(
     @Request() req: IRequest,
@@ -37,7 +37,7 @@ export class AddressController {
   @UseGuards(JwtGuard)
   async getUserAddress(
     @Request() req: IRequest,
-    @Param() params: AddressChainParams,
+    @Param() params: GetAddressParams,
   ): Promise<GetAddressResponseDto> {
     return plainToClass(
       GetAddressResponseDto,
