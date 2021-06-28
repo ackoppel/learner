@@ -9,8 +9,9 @@ import { ConfigService } from '@nestjs/config';
 import { Chain } from '../coin/enum/chain';
 import { Token } from './entity/token.entity';
 import { CoinService } from '../coin/coin.service';
-import { TokenBalanceService } from '../profile/tokenBalance/tokenBalance.service';
-import { AddressService } from '../profile/address/address.service';
+import { TokenBalanceService } from './tokenBalance/tokenBalance.service';
+import { AddressService } from '../coin/address/address.service';
+import { TokenBalance } from './tokenBalance/entity/tokenBalance.entity';
 
 @Injectable()
 export class TokenService {
@@ -27,10 +28,10 @@ export class TokenService {
     return this.tokenRepository.find();
   }
 
-  async createUniswapToken(
+  async addUniswapToken(
     createTokenDto: CreateTokenDto,
     authCredentialsId: string,
-  ): Promise<Token> {
+  ): Promise<TokenBalance> {
     const address = await this.addressService.checkAddress(
       authCredentialsId,
       createTokenDto.userAddress,
@@ -40,8 +41,7 @@ export class TokenService {
       await this.fetchUniswapTokenDetails(createTokenDto.tokenAddress),
       await this.coinService.getCoin(Chain.ETH),
     );
-    await this.tokenBalanceService.fetchAndInsertTokenBalance(address, token);
-    return token;
+    return this.tokenBalanceService.fetchAndInsertTokenBalance(address, token);
   }
 
   private async fetchUniswapTokenDetails(

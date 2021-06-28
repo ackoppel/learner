@@ -1,5 +1,5 @@
 import { Exclude, Expose, Transform, Type } from 'class-transformer';
-import { TokenBalanceResponseDto } from '../../tokenBalance/dto/tokenBalanceResponse.dto';
+import { TokenBalanceResponseDto } from '../../../token/tokenBalance/dto/tokenBalanceResponse.dto';
 import { TokenHelper } from '../../../helper/tokenHelper/tokenHelper';
 
 @Exclude()

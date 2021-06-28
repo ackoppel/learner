@@ -4,19 +4,18 @@ import { TokenController } from './token.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TokenRepository } from './entity/token.repository';
 import { ConfigModule } from '@nestjs/config';
-import { ProfileModule } from '../profile/profile.module';
 import { CoinModule } from '../coin/coin.module';
-import { AddressModule } from '../profile/address/address.module';
+import { TokenBalanceRepository } from './tokenBalance/entity/tokenBalance.repository';
+import { TokenBalanceService } from './tokenBalance/tokenBalance.service';
+import { TokenBalanceController } from './tokenBalance/tokenBalance.controller';
 
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([TokenRepository]),
-    ProfileModule,
-    AddressModule,
+    TypeOrmModule.forFeature([TokenRepository, TokenBalanceRepository]),
     CoinModule,
   ],
-  providers: [TokenService],
-  controllers: [TokenController],
+  providers: [TokenService, TokenBalanceService],
+  controllers: [TokenController, TokenBalanceController],
 })
 export class TokenModule {}

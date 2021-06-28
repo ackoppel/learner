@@ -1,8 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Address } from './address.entity';
-import { Profile } from '../../enitity/profile.entity';
+import { Profile } from '../../../profile/enitity/profile.entity';
 import { ConnectorCoinBalance } from '../../../externalApi/model/coinBalance.connector';
-import { Coin } from '../../../coin/entity/coin.entity';
+import { Coin } from '../../entity/coin.entity';
 
 @EntityRepository(Address)
 export class AddressRepository extends Repository<Address> {
@@ -38,10 +38,10 @@ export class AddressRepository extends Repository<Address> {
   async getProfileAddress(
     profile: Profile,
     coin: Coin,
-    contractAddress: string,
+    userAddress: string,
   ): Promise<Address> {
     return this.createQueryBuilder('a')
-      .where({ profile, coin, contractAddress })
+      .where({ profile, coin, contractAddress: userAddress })
       .leftJoinAndSelect('a.coin', 'c')
       .leftJoinAndSelect('a.tokenBalances', 'tb')
       .leftJoinAndSelect('tb.token', 't')

@@ -14,7 +14,7 @@ import { GetAddressResponseDto } from './dto/getAddressResponse.dto';
 import { plainToClass } from 'class-transformer';
 import { AddAddressDto } from './dto/addAddress.dto';
 import { AddAddressResponseDto } from './dto/addAddressResponse.dto';
-import { Chain } from '../../coin/enum/chain';
+import { AddressChainParams } from '../dto/addressChain.params';
 
 @Controller('address')
 export class AddressController {
@@ -33,19 +33,18 @@ export class AddressController {
     );
   }
 
-  @Get('/:contractAddress/:chain')
+  @Get('/:userAddress/:chain')
   @UseGuards(JwtGuard)
   async getUserAddress(
     @Request() req: IRequest,
-    @Param('contractAddress') contractAddress: string,
-    @Param('chain') chain: Chain,
+    @Param() params: AddressChainParams,
   ): Promise<GetAddressResponseDto> {
     return plainToClass(
       GetAddressResponseDto,
       await this.addressService.getSingleProfileAddress(
         req.user.getAuthCredentialsId(),
-        contractAddress,
-        chain,
+        params.userAddress,
+        params.chain,
       ),
     );
   }

@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { GenderType } from '../enum/gender';
 import { AuthCredentials } from '../../auth/entity/auth-credentials.entity';
-import { Address } from '../address/entity/address.entity';
+import { Address } from '../../coin/address/entity/address.entity';
 
 @Entity()
 export class Profile {
@@ -28,6 +28,8 @@ export class Profile {
   @JoinColumn()
   authCredentials: AuthCredentials;
 
-  @OneToMany(() => Address, (address) => address.profile, { nullable: true })
+  @OneToMany(() => Address, (address) => address.profile, {
+    nullable: true,
+  })
   addresses: Address[];
 }

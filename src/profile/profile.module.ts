@@ -4,22 +4,16 @@ import { ProfileService } from './profile.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfileRepository } from './enitity/profile.repository';
 import { AuthModule } from '../auth/auth.module';
-import { CoinModule } from '../coin/coin.module';
-import { TokenBalanceRepository } from './tokenBalance/entity/tokenBalance.repository';
-import { TokenBalanceService } from './tokenBalance/tokenBalance.service';
-import { AddressModule } from './address/address.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ProfileRepository, TokenBalanceRepository]),
-    forwardRef(() => AuthModule),
-    CoinModule,
-    AddressModule,
     ConfigModule,
+    TypeOrmModule.forFeature([ProfileRepository]),
+    forwardRef(() => AuthModule),
   ],
-  providers: [ProfileService, TokenBalanceService],
+  providers: [ProfileService],
   controllers: [ProfileController],
-  exports: [ProfileService, TokenBalanceService],
+  exports: [ProfileService],
 })
 export class ProfileModule {}

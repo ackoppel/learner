@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -8,10 +7,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AddressRepository } from './entity/address.repository';
 import { AddAddressDto } from './dto/addAddress.dto';
 import { Address } from './entity/address.entity';
-import { Chain } from '../../coin/enum/chain';
-import { Profile } from '../enitity/profile.entity';
-import { ProfileService } from '../profile.service';
-import { CoinService } from '../../coin/coin.service';
+import { Chain } from '../enum/chain';
+import { Profile } from '../../profile/enitity/profile.entity';
+import { ProfileService } from '../../profile/profile.service';
+import { CoinService } from '../coin.service';
 
 @Injectable()
 export class AddressService {
@@ -55,17 +54,17 @@ export class AddressService {
   // detailed address with token balances
   async getSingleProfileAddress(
     authCredentialsId: string,
-    contractAddress: string,
+    userAddress: string,
     chain: Chain,
   ): Promise<Address> {
     const address = await this.addressRepository.getProfileAddress(
       await this.profileService.getProfile(authCredentialsId),
       await this.coinService.getCoin(chain),
-      contractAddress,
+      userAddress,
     );
     if (!address) {
       throw new NotFoundException(
-        `${chain} address ${contractAddress} is not in your address list`,
+        `${chain} address ${userAddress} is not in your address list`,
       );
     }
     return address;
@@ -97,8 +96,8 @@ export class AddressService {
       chain,
     );
     if (!address) {
-      throw new BadRequestException(
-        `You must add ${chain} address "${userAddress}" to add tokens`,
+      throw new NotFoundException(
+        `You must add ${chain} address "${userAddress}" to your address list`,
       );
     }
     return address;

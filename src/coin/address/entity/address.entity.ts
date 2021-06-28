@@ -6,9 +6,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Profile } from '../../enitity/profile.entity';
-import { TokenBalance } from '../../tokenBalance/entity/tokenBalance.entity';
-import { Coin } from '../../../coin/entity/coin.entity';
+import { Profile } from '../../../profile/enitity/profile.entity';
+import { TokenBalance } from '../../../token/tokenBalance/entity/tokenBalance.entity';
+import { Coin } from '../../entity/coin.entity';
 
 @Entity()
 export class Address {

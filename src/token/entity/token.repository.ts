@@ -2,6 +2,7 @@ import { EntityRepository, Repository } from 'typeorm';
 import { Token } from './token.entity';
 import { ConnectorTokenDetails } from '../../externalApi/model/tokenDetails.connector';
 import { Coin } from '../../coin/entity/coin.entity';
+import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Token)
 export class TokenRepository extends Repository<Token> {
@@ -32,5 +33,18 @@ export class TokenRepository extends Repository<Token> {
     } else {
       return this.save(model);
     }
+  }
+
+  async checkToken(address: string, coin: Coin): Promise<Token> {
+    const token = await this.findOne({
+      address,
+      coin,
+    });
+    if (!token) {
+      throw new NotFoundException(
+        `Please add ${coin.name} chain token with address ${address} to keep track of your balance`,
+      );
+    }
+    return token;
   }
 }

@@ -12,6 +12,7 @@ import { CreateTokenDto } from './dto/createToken.dto';
 import { IRequest } from '../auth/interface/request';
 import { plainToClass } from 'class-transformer';
 import { TokenResponseDto } from './dto/tokenResponse.dto';
+import { TokenBalanceResponseDto } from './tokenBalance/dto/tokenBalanceResponse.dto';
 
 @Controller('token')
 export class TokenController {
@@ -28,13 +29,13 @@ export class TokenController {
 
   @Post('uniswap')
   @UseGuards(JwtGuard)
-  async createUniswapToken(
+  async addUniswapToken(
     @Body() createTokenDto: CreateTokenDto,
     @Request() req: IRequest,
-  ): Promise<TokenResponseDto> {
+  ): Promise<TokenBalanceResponseDto> {
     return plainToClass(
-      TokenResponseDto,
-      await this.tokenService.createUniswapToken(
+      TokenBalanceResponseDto,
+      await this.tokenService.addUniswapToken(
         createTokenDto,
         req.user.getAuthCredentialsId(),
       ),

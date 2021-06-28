@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Chain } from '../enum/chain';
-import { Address } from '../../profile/address/entity/address.entity';
+import { Address } from '../address/entity/address.entity';
 import { Token } from '../../token/entity/token.entity';
 
 @Entity()

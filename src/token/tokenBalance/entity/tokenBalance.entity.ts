@@ -5,8 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Token } from '../../../token/entity/token.entity';
-import { Address } from '../../address/entity/address.entity';
+import { Token } from '../../entity/token.entity';
+import { Address } from '../../../coin/address/entity/address.entity';
 
 @Entity()
 export class TokenBalance {
@@ -15,6 +15,7 @@ export class TokenBalance {
 
   @ManyToOne(() => Token, (token) => token.balances, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   token: Token;
 
