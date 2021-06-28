@@ -33,29 +33,4 @@ export class AddressRepository extends Repository<Address> {
       return this.save(model);
     }
   }
-
-  // todo :: find a way to connect below two queries
-  async getProfileAddress(
-    profile: Profile,
-    coin: Coin,
-    userAddress: string,
-  ): Promise<Address> {
-    return this.createQueryBuilder('a')
-      .where({ profile, coin, contractAddress: userAddress })
-      .leftJoinAndSelect('a.coin', 'c')
-      .leftJoinAndSelect('a.tokenBalances', 'tb')
-      .leftJoinAndSelect('tb.token', 't')
-      .leftJoinAndSelect('t.coin', 'c2') // join to token for calculating value
-      .getOne();
-  }
-
-  async getProfileAddressList(profile: Profile): Promise<Address[]> {
-    return this.createQueryBuilder('a')
-      .where({ profile })
-      .leftJoinAndSelect('a.coin', 'c')
-      .leftJoinAndSelect('a.tokenBalances', 'tb')
-      .leftJoinAndSelect('tb.token', 't')
-      .leftJoinAndSelect('t.coin', 'c2') // join to token for calculating value
-      .getMany();
-  }
 }

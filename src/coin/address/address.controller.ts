@@ -2,8 +2,8 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { GetAddressResponseDto } from './dto/getAddressResponse.dto';
 import { plainToClass } from 'class-transformer';
 import { AddAddressDto } from './dto/addAddress.dto';
 import { AddAddressResponseDto } from './dto/addAddressResponse.dto';
-import { GetAddressParams } from './params/getAddress.params';
+import { GetAddressQuery } from './query/getAddress.query';
 
 @Controller('address')
 export class AddressController {
@@ -24,29 +24,28 @@ export class AddressController {
   @UseGuards(JwtGuard)
   async getUserAddressList(
     @Request() req: IRequest,
-  ): Promise<GetAddressResponseDto[]> {
-    return plainToClass(
-      GetAddressResponseDto,
-      await this.addressService.getProfileAddressList(
-        req.user.getAuthCredentialsId(),
-      ),
-    );
-  }
-
-  @Get('/:userAddress/:chain')
-  @UseGuards(JwtGuard)
-  async getUserAddress(
-    @Request() req: IRequest,
-    @Param() params: GetAddressParams,
-  ): Promise<GetAddressResponseDto> {
-    return plainToClass(
-      GetAddressResponseDto,
-      await this.addressService.getSingleProfileAddress(
-        req.user.getAuthCredentialsId(),
-        params.userAddress,
-        params.chain,
-      ),
-    );
+    @Query() query: GetAddressQuery,
+  ): Promise<GetAddressResponseDto[] | GetAddressResponseDto> {
+    switch (true) {
+      // query was provided
+      case !!query.chain && !!query.userAddress:
+        return plainToClass(
+          GetAddressResponseDto,
+          await this.addressService.checkAddress(
+            req.user.getAuthCredentialsId(),
+            query.userAddress,
+            query.chain,
+          ),
+        );
+      //query was not defined
+      default:
+        return plainToClass(
+          GetAddressResponseDto,
+          await this.addressService.getProfileAddressList(
+            req.user.getAuthCredentialsId(),
+          ),
+        );
+    }
   }
 
   @Post()

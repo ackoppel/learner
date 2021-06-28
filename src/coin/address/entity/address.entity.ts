@@ -33,6 +33,8 @@ export class Address {
   @Column({ type: 'timestamp' })
   lastSync: Date;
 
-  @OneToMany(() => TokenBalance, (tokenBalance) => tokenBalance.address)
+  @OneToMany(() => TokenBalance, (tokenBalance) => tokenBalance.address, {
+    eager: true,
+  })
   tokenBalances: TokenBalance[];
 }

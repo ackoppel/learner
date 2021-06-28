@@ -46,31 +46,12 @@ export class AddressService {
   }
 
   async getProfileAddressList(authCredentialsId: string): Promise<Address[]> {
-    return this.addressRepository.getProfileAddressList(
-      await this.profileService.getProfile(authCredentialsId),
-    );
+    return this.addressRepository.find({
+      profile: await this.profileService.getProfile(authCredentialsId),
+    });
   }
 
-  // detailed address with token balances
-  async getSingleProfileAddress(
-    authCredentialsId: string,
-    userAddress: string,
-    chain: Chain,
-  ): Promise<Address> {
-    const address = await this.addressRepository.getProfileAddress(
-      await this.profileService.getProfile(authCredentialsId),
-      await this.coinService.getCoin(chain),
-      userAddress,
-    );
-    if (!address) {
-      throw new NotFoundException(
-        `${chain} address ${userAddress} is not in your address list`,
-      );
-    }
-    return address;
-  }
-
-  // simple address with coin
+  // simple address with coin and token balance
   async getAddress(
     authCredentialsId: string,
     contractAddress: string,
@@ -85,6 +66,7 @@ export class AddressService {
     });
   }
 
+  // check if address is added by user
   async checkAddress(
     authCredentialsId: string,
     userAddress: string,
@@ -97,7 +79,7 @@ export class AddressService {
     );
     if (!address) {
       throw new NotFoundException(
-        `You must add ${chain} address "${userAddress}" to your address list`,
+        `${chain} address ${userAddress} is not in your address list`,
       );
     }
     return address;
