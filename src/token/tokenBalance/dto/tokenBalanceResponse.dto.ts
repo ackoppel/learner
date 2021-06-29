@@ -1,5 +1,6 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { TokenHelper } from '../../../helper/tokenHelper/tokenHelper';
+import { BalanceHelper } from '../../../helper/balanceHelper/balance.helper';
+// import { MarketMaker } from '../../enum/marketMaker.enum';
 
 @Exclude()
 export class TokenBalanceResponseDto {
@@ -23,9 +24,13 @@ export class TokenBalanceResponseDto {
   @Transform(({ obj }) => obj.token.priceInCoin)
   priceInCoin: string;
 
+  // @Expose()
+  // @Transform(({ obj }) => obj.token.marketMaker)
+  // marketMaker: MarketMaker;
+
   @Expose()
   @Transform(({ obj }) =>
-    TokenHelper.convertPrice(obj.token.priceInCoin, obj.token.coin.priceUsd),
+    BalanceHelper.tokenPriceUsd(obj.token.priceInCoin, obj.token.coin.priceUsd),
   )
   priceUsd: string;
 
@@ -35,13 +40,13 @@ export class TokenBalanceResponseDto {
 
   @Expose()
   @Transform(({ obj }) =>
-    TokenHelper.convertBalance(obj.balance, obj.token.decimals),
+    BalanceHelper.balanceWitDecimals(obj.balance, obj.token.decimals),
   )
   balanceConverted: number;
 
   @Expose()
   @Transform(({ obj }) =>
-    TokenHelper.convertBalanceToValueUsd(
+    BalanceHelper.tokenBalanceUsd(
       obj.balance,
       obj.token.decimals,
       obj.token.priceInCoin,

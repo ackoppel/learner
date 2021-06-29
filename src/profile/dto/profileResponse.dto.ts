@@ -1,5 +1,6 @@
-import { Exclude, Expose, Transform } from 'class-transformer';
+import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import { GenderType } from '../enum/gender';
+import { AddressResponseDto } from '../../coin/address/dto/addressResponse.dto';
 
 @Exclude()
 export class ProfileResponseDto {
@@ -22,4 +23,8 @@ export class ProfileResponseDto {
   @Expose()
   @Transform(({ obj }) => obj.description)
   description: string;
+
+  @Expose()
+  @Type(() => AddressResponseDto)
+  addresses: AddressResponseDto[];
 }

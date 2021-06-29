@@ -13,8 +13,9 @@ import { ConnectorCoinPrice } from '../model/coinPrice.connector';
 import { UniswapPriceFactory } from './price/uniswapPrice.factory';
 import { ConnectorTokenPrice } from '../model/tokenPrice.connector';
 import { ConnectorTokenDetails } from '../model/tokenDetails.connector';
+import { IMarketMakerConnector } from '../interface/marketMakerConnector.interface';
 
-export class Connector {
+export class Connector implements IMarketMakerConnector {
   private readonly baseUrl =
     'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2';
 
@@ -45,7 +46,7 @@ export class Connector {
   }
 
   // eth price
-  public async fetchEthPriceInUsd(): Promise<IUniswapEthPrice> {
+  public async fetchEthPriceUsd(): Promise<IUniswapEthPrice> {
     return this.performRequest(ethPriceInUsdQuery());
   }
 

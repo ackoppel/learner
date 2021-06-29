@@ -8,6 +8,7 @@ import { CoinModule } from '../coin/coin.module';
 import { TokenBalanceRepository } from './tokenBalance/entity/tokenBalance.repository';
 import { TokenBalanceService } from './tokenBalance/tokenBalance.service';
 import { TokenBalanceController } from './tokenBalance/tokenBalance.controller';
+import { TokenHelper } from './helper/tokenHelper';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { TokenBalanceController } from './tokenBalance/tokenBalance.controller';
     TypeOrmModule.forFeature([TokenRepository, TokenBalanceRepository]),
     CoinModule,
   ],
-  providers: [TokenService, TokenBalanceService],
+  providers: [TokenService, TokenBalanceService, TokenHelper],
   controllers: [TokenController, TokenBalanceController],
 })
 export class TokenModule {}

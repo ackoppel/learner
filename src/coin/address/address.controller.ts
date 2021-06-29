@@ -10,7 +10,7 @@ import {
 import { AddressService } from './address.service';
 import { JwtGuard } from '../../auth/jwtGuard';
 import { IRequest } from '../../auth/interface/request';
-import { GetAddressResponseDto } from './dto/getAddressResponse.dto';
+import { AddressResponseDto } from './dto/addressResponse.dto';
 import { plainToClass } from 'class-transformer';
 import { AddAddressDto } from './dto/addAddress.dto';
 import { AddAddressResponseDto } from './dto/addAddressResponse.dto';
@@ -25,22 +25,22 @@ export class AddressController {
   async getUserAddressList(
     @Request() req: IRequest,
     @Query() query: GetAddressQuery,
-  ): Promise<GetAddressResponseDto[] | GetAddressResponseDto> {
+  ): Promise<AddressResponseDto | AddressResponseDto[]> {
     switch (true) {
       // query was provided
-      case !!query.chain && !!query.userAddress:
+      case !!query.chain && !!query.contract:
         return plainToClass(
-          GetAddressResponseDto,
+          AddressResponseDto,
           await this.addressService.checkAddress(
             req.user.getAuthCredentialsId(),
-            query.userAddress,
+            query.contract,
             query.chain,
           ),
         );
       //query was not defined
       default:
         return plainToClass(
-          GetAddressResponseDto,
+          AddressResponseDto,
           await this.addressService.getProfileAddressList(
             req.user.getAuthCredentialsId(),
           ),
@@ -50,7 +50,7 @@ export class AddressController {
 
   @Post()
   @UseGuards(JwtGuard)
-  async addEthAddress(
+  async addAddress(
     @Body() addAddressDto: AddAddressDto,
     @Request() req: IRequest,
   ): Promise<AddAddressResponseDto> {

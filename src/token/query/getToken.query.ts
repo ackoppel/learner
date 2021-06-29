@@ -1,10 +1,10 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { Chain } from '../../enum/chain';
+import { Chain } from '../../coin/enum/chain';
 
-export class GetAddressQuery {
+export class GetTokenQuery {
   @IsString()
   @IsOptional()
-  contract: string;
+  address: string;
 
   @IsEnum(Chain)
   @IsOptional()

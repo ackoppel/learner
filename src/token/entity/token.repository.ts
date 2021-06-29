@@ -3,18 +3,21 @@ import { Token } from './token.entity';
 import { ConnectorTokenDetails } from '../../externalApi/model/tokenDetails.connector';
 import { Coin } from '../../coin/entity/coin.entity';
 import { NotFoundException } from '@nestjs/common';
+// import { MarketMaker } from '../enum/marketMaker.enum';
 
 @EntityRepository(Token)
 export class TokenRepository extends Repository<Token> {
   async createOrUpdateToken(
     token: ConnectorTokenDetails,
     coin: Coin,
+    // marketMaker: MarketMaker,
   ): Promise<Token> {
     const model = this.create({
       address: token.address,
       name: token.name,
       symbol: token.symbol,
       priceInCoin: token.priceInCoin,
+      // marketMaker,
       coin,
       decimals: token.decimals,
       logoUrl: token.logoUrl,

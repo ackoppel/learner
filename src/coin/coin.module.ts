@@ -8,6 +8,7 @@ import { AddressRepository } from './address/entity/address.repository';
 import { AddressService } from './address/address.service';
 import { AddressController } from './address/address.controller';
 import { ProfileModule } from '../profile/profile.module';
+import { CoinHelper } from './helper/coinHelper';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { ProfileModule } from '../profile/profile.module';
     ConfigModule,
     ProfileModule,
   ],
-  providers: [CoinService, AddressService],
+  providers: [CoinService, AddressService, CoinHelper],
   controllers: [CoinController, AddressController],
   exports: [CoinService, AddressService],
 })

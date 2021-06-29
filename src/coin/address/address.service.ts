@@ -1,16 +1,12 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddressRepository } from './entity/address.repository';
 import { AddAddressDto } from './dto/addAddress.dto';
 import { Address } from './entity/address.entity';
 import { Chain } from '../enum/chain';
-import { Profile } from '../../profile/enitity/profile.entity';
 import { ProfileService } from '../../profile/profile.service';
 import { CoinService } from '../coin.service';
+import { CoinHelper } from '../helper/coinHelper';
 
 @Injectable()
 export class AddressService {
@@ -19,28 +15,19 @@ export class AddressService {
     private addressRepository: AddressRepository,
     private profileService: ProfileService,
     private coinService: CoinService,
+    private coinHelper: CoinHelper,
   ) {}
 
   async addAddress(
     addAddressDto: AddAddressDto,
     authCredentialsId: string,
   ): Promise<Address> {
-    const profile = await this.profileService.getProfile(authCredentialsId);
-    switch (addAddressDto.chain) {
-      case Chain.ETH:
-        return this.addEthAddress(profile, addAddressDto);
-      default:
-        throw new InternalServerErrorException();
-    }
-  }
-
-  private async addEthAddress(
-    profile: Profile,
-    addAddressDto: AddAddressDto,
-  ): Promise<Address> {
     return this.addressRepository.insertOrUpdateAddress(
-      await this.coinService.fetchExternalEthBalance(addAddressDto.address),
-      profile,
+      await this.coinHelper.fetchExternalCoinBalance(
+        addAddressDto.address,
+        addAddressDto.chain,
+      ),
+      await this.profileService.getProfile(authCredentialsId),
       await this.coinService.getCoin(addAddressDto.chain),
     );
   }
@@ -48,21 +35,6 @@ export class AddressService {
   async getProfileAddressList(authCredentialsId: string): Promise<Address[]> {
     return this.addressRepository.find({
       profile: await this.profileService.getProfile(authCredentialsId),
-    });
-  }
-
-  // simple address with coin and token balance
-  async getAddress(
-    authCredentialsId: string,
-    contractAddress: string,
-    chain: Chain,
-  ): Promise<Address> {
-    const profile = await this.profileService.getProfile(authCredentialsId);
-    const coin = await this.coinService.getCoin(chain);
-    return this.addressRepository.findOne({
-      contractAddress,
-      profile,
-      coin,
     });
   }
 
@@ -83,5 +55,18 @@ export class AddressService {
       );
     }
     return address;
+  }
+
+  // simple address with coin and token balance
+  private async getAddress(
+    authCredentialsId: string,
+    contractAddress: string,
+    chain: Chain,
+  ): Promise<Address> {
+    return this.addressRepository.findOne({
+      contractAddress,
+      profile: await this.profileService.getProfile(authCredentialsId),
+      coin: await this.coinService.getCoin(chain),
+    });
   }
 }

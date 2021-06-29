@@ -20,10 +20,10 @@ export class ProfileController {
   @Get()
   @UseGuards(JwtGuard)
   async getProfile(@Request() req: IRequest): Promise<ProfileResponseDto> {
-    const profile = await this.profileService.getProfile(
-      req.user.getAuthCredentialsId(),
+    return plainToClass(
+      ProfileResponseDto,
+      await this.profileService.getProfile(req.user.getAuthCredentialsId()),
     );
-    return plainToClass(ProfileResponseDto, profile);
   }
 
   @Patch()
@@ -32,10 +32,12 @@ export class ProfileController {
     @Request() req: IRequest,
     @Body() updateProfileRequestDto: UpdateProfileRequestDto,
   ): Promise<ProfileResponseDto> {
-    const updated = await this.profileService.updateProfile(
-      updateProfileRequestDto,
-      req.user.getAuthCredentialsId(),
+    return plainToClass(
+      ProfileResponseDto,
+      await this.profileService.updateProfile(
+        updateProfileRequestDto,
+        req.user.getAuthCredentialsId(),
+      ),
     );
-    return plainToClass(ProfileResponseDto, updated);
   }
 }

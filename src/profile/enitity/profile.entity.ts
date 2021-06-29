@@ -30,6 +30,7 @@ export class Profile {
 
   @OneToMany(() => Address, (address) => address.profile, {
     nullable: true,
+    eager: true,
   })
   addresses: Address[];
 }
