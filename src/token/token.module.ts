@@ -9,14 +9,26 @@ import { TokenBalanceRepository } from './tokenBalance/entity/tokenBalance.repos
 import { TokenBalanceService } from './tokenBalance/tokenBalance.service';
 import { TokenBalanceController } from './tokenBalance/tokenBalance.controller';
 import { TokenHelper } from './helper/tokenHelper';
+import { TokenUpdateQueueTaskProcessor } from './tokenUpdateQueueTask.processor';
+import { BullModule } from '@nestjs/bull';
+import { TOKEN_UPDATE_QUEUE } from '../constants/constants';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([TokenRepository, TokenBalanceRepository]),
+    BullModule.registerQueueAsync({
+      name: TOKEN_UPDATE_QUEUE,
+    }),
     CoinModule,
   ],
-  providers: [TokenService, TokenBalanceService, TokenHelper],
+  providers: [
+    TokenService,
+    TokenBalanceService,
+    TokenHelper,
+    TokenUpdateQueueTaskProcessor,
+  ],
   controllers: [TokenController, TokenBalanceController],
+  exports: [TokenService],
 })
 export class TokenModule {}

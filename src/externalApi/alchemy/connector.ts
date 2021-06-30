@@ -7,7 +7,8 @@ import { AlchemyTokenLogoFactory } from './logo/alchemyTokenLogo.factory';
 import { IAlchemyTokenBalance } from './balance/alchemyTokenBalance.interface';
 import { ConnectorTokenBalance } from '../model/tokenBalance.connector';
 import { AlchemyTokenBalanceFactory } from './balance/alchemyTokenBalance.factory';
-import { IDetailsConnector } from '../interface/detailsConnector.interface';
+import { ITokenLogoConnector } from '../interface/tokenLogoConnector.interface';
+import { ITokenBalanceConnector } from '../interface/tokenBalanceConnector.interface';
 
 enum MethodType {
   tokenMetadata = 'alchemy_getTokenMetadata',
@@ -19,7 +20,7 @@ interface IRequestParams {
   method: MethodType;
 }
 
-export class Connector implements IDetailsConnector {
+export class Connector implements ITokenLogoConnector, ITokenBalanceConnector {
   private baseUrl = 'https://eth-mainnet.alchemyapi.io/v2/';
 
   constructor(private apiKey: string, private userAddress?: string) {}

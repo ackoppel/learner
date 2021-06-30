@@ -1,31 +1,36 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-// import { MarketMaker } from '../enum/marketMaker.enum';
 import { ConnectorTokenDetails } from '../../externalApi/model/tokenDetails.connector';
 import { Connector as UniswapConnector } from '../../externalApi/uniswap/connector';
 import { Connector as AlchemyConnector } from '../../externalApi/alchemy/connector';
 import { Chain } from '../../coin/enum/chain';
 import { ConnectorTokenBalance } from '../../externalApi/model/tokenBalance.connector';
 import { IMarketMakerConnector } from '../../externalApi/interface/marketMakerConnector.interface';
-import { IDetailsConnector } from '../../externalApi/interface/detailsConnector.interface';
+import { ITokenLogoConnector } from '../../externalApi/interface/tokenLogoConnector.interface';
 import { ConnectorTokenLogo } from '../../externalApi/model/tokenLogo.connector';
 import { UniswapTokenDetailsHelper } from '../../externalApi/uniswap/helper/tokenDetails.helper';
 import { AlchemyTokenLogoHelper } from '../../externalApi/alchemy/helper/tokenLogo.helper';
+import { ConnectorTokenPrice } from '../../externalApi/model/tokenPrice.connector';
+import { ITokenBalanceConnector } from '../../externalApi/interface/tokenBalanceConnector.interface';
 
 @Injectable()
 export class TokenHelper {
   constructor(private configService: ConfigService) {}
 
+  public async fetchExternalTokenPrice(
+    tokenAddress: string,
+    chain: Chain,
+  ): Promise<ConnectorTokenPrice> {
+    const apiConnector = this.getMarketConnector(chain);
+    const tokenPrice = await apiConnector.fetchTokenPriceInCoin(tokenAddress);
+    return apiConnector.convertTokenPrice(tokenPrice);
+  }
+
   public async fetchExternalTokenDetails(
     tokenAddress: string,
     chain: Chain,
-    // marketMaker: MarketMaker,
   ): Promise<ConnectorTokenDetails> {
-    const tokenModel = await this.getExternalTokenDetails(
-      tokenAddress,
-      chain,
-      // marketMaker,
-    );
+    const tokenModel = await this.getExternalTokenDetails(tokenAddress, chain);
     const logoModel = await this.getExternalTokenLogo(tokenAddress, chain);
     tokenModel.logoUrl = logoModel.logoUrl;
     return tokenModel;
@@ -36,7 +41,10 @@ export class TokenHelper {
     tokenAddress: string,
     chain: Chain,
   ): Promise<ConnectorTokenBalance> {
-    const apiConnector = this.getDetailsConnector(chain, userAddress);
+    const apiConnector = this.getDetailsConnector(
+      chain,
+      userAddress,
+    ) as ITokenBalanceConnector;
     const tokenBalanceData = await apiConnector.fetchTokenBalance(tokenAddress);
     return apiConnector.convertTokenBalance(tokenBalanceData);
   }
@@ -44,15 +52,7 @@ export class TokenHelper {
   private async getExternalTokenDetails(
     tokenAddress: string,
     chain: Chain,
-    // marketMaker: MarketMaker,
   ): Promise<ConnectorTokenDetails> {
-    // switch (marketMaker) {
-    //   case MarketMaker.UNISWAP:
-    //     return UniswapTokenDetailsHelper.fetchTokenDetails(
-    //       tokenAddress,
-    //       this.getMarketConnector(marketMaker),
-    //     );
-    // }
     switch (chain) {
       case Chain.ETH:
         return UniswapTokenDetailsHelper.fetchTokenDetails(
@@ -70,7 +70,7 @@ export class TokenHelper {
       case Chain.ETH:
         return AlchemyTokenLogoHelper.fetchTokenLogo(
           tokenAddress,
-          this.getDetailsConnector(chain),
+          this.getDetailsConnector(chain) as ITokenLogoConnector,
         );
     }
   }
@@ -79,7 +79,7 @@ export class TokenHelper {
   private getDetailsConnector(
     chain: Chain,
     userAddress?: string,
-  ): IDetailsConnector {
+  ): ITokenBalanceConnector | ITokenLogoConnector {
     switch (chain) {
       case Chain.ETH:
         return new AlchemyConnector(
@@ -94,18 +94,7 @@ export class TokenHelper {
   }
 
   // create connector here in case apiKey is needed from configService
-  private getMarketConnector(
-    // marketMaker: MarketMaker
-    chain: Chain,
-  ): IMarketMakerConnector {
-    // switch (marketMaker) {
-    //   case MarketMaker.UNISWAP:
-    //     return new UniswapConnector();
-    //   default:
-    //     throw new InternalServerErrorException(
-    //       `Market maker ${marketMaker} not implemented`,
-    //     );
-    // }
+  private getMarketConnector(chain: Chain): IMarketMakerConnector {
     switch (chain) {
       case Chain.ETH:
         return new UniswapConnector();

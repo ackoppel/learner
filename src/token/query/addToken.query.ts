@@ -1,7 +1,7 @@
 import { IsEnum } from 'class-validator';
 import { Chain } from '../../coin/enum/chain';
 
-export class AddTokenParams {
+export class AddTokenQuery {
   @IsEnum(Chain)
   chain: Chain;
 }

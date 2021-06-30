@@ -1,10 +1,10 @@
-import { IDetailsConnector } from '../../interface/detailsConnector.interface';
+import { ITokenLogoConnector } from '../../interface/tokenLogoConnector.interface';
 import { ConnectorTokenLogo } from '../../model/tokenLogo.connector';
 
 export class AlchemyTokenLogoHelper {
   static async fetchTokenLogo(
     tokenAddress: string,
-    apiConnector: IDetailsConnector,
+    apiConnector: ITokenLogoConnector,
   ): Promise<ConnectorTokenLogo> {
     const logoData = await apiConnector.fetchTokenLogo(tokenAddress);
     if ('error' in logoData) {

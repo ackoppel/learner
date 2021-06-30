@@ -8,7 +8,6 @@ import { CoinService } from '../coin/coin.service';
 import { TokenBalanceService } from './tokenBalance/tokenBalance.service';
 import { AddressService } from '../coin/address/address.service';
 import { TokenHelper } from './helper/tokenHelper';
-// import { MarketMaker } from './enum/marketMaker.enum';
 
 @Injectable()
 export class TokenService {
@@ -46,10 +45,8 @@ export class TokenService {
       await this.tokenHelper.fetchExternalTokenDetails(
         createTokenDto.tokenAddress,
         chain,
-        // marketMaker,
       ),
       await this.coinService.getCoin(chain),
-      // marketMaker,
     );
     await this.tokenBalanceService.fetchAndInsertTokenBalance(address, token);
     return token;

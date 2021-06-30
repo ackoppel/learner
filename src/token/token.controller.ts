@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   Query,
   Request,
@@ -15,9 +14,7 @@ import { IRequest } from '../auth/interface/request';
 import { plainToClass } from 'class-transformer';
 import { TokenResponseDto } from './dto/tokenResponse.dto';
 import { GetTokenQuery } from './query/getToken.query';
-// import { MarketMaker } from './enum/marketMaker.enum';
-// import { Chain } from '../coin/enum/chain';
-import { AddTokenParams } from './params/addToken.params';
+import { AddTokenQuery } from './query/addToken.query';
 
 @Controller('token')
 export class TokenController {
@@ -44,10 +41,10 @@ export class TokenController {
     }
   }
 
-  @Post(':chain')
+  @Post()
   @UseGuards(JwtGuard)
-  async addUniswapToken(
-    @Param() params: AddTokenParams,
+  async addToken(
+    @Query() query: AddTokenQuery,
     @Body() createTokenDto: CreateTokenDto,
     @Request() req: IRequest,
   ): Promise<TokenResponseDto> {
@@ -56,7 +53,7 @@ export class TokenController {
       await this.tokenService.addToken(
         createTokenDto,
         req.user.getAuthCredentialsId(),
-        params.chain,
+        query.chain,
       ),
     );
   }

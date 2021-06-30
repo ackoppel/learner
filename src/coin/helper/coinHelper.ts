@@ -1,11 +1,13 @@
 import { Chain } from '../enum/chain';
 import { ConnectorCoinBalance } from '../../externalApi/model/coinBalance.connector';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { EtherscanBalanceFactory } from '../../externalApi/etherscan/ethBalance/etherscanEthBalance.factory';
 import { Connector as EtherscanConnector } from '../../externalApi/etherscan/connector';
 import { ConfigService } from '@nestjs/config';
 import { Connector as UniswapConnector } from '../../externalApi/uniswap/connector';
 import { ConnectorCoinPrice } from '../../externalApi/model/coinPrice.connector';
+import { EtherscanCoinBalanceHelper } from '../../externalApi/etherscan/helper/coinBalance.helper';
+import { ICoinPriceConnector } from '../../externalApi/interface/coinPriceConnector.interface';
+import { ICoinBalanceConnector } from '../../externalApi/interface/coinBalanceConnector.interface';
 
 @Injectable()
 export class CoinHelper {
@@ -17,42 +19,22 @@ export class CoinHelper {
   ): Promise<ConnectorCoinBalance> {
     switch (chain) {
       case Chain.ETH:
-        return this.fetchEthBalance(address);
+        return EtherscanCoinBalanceHelper.fetchCoinBalance(
+          address,
+          this.createBalanceApiConnector(chain),
+        );
     }
   }
 
   public async fetchExternalCoinPrice(
     chain: Chain,
   ): Promise<ConnectorCoinPrice> {
-    switch (chain) {
-      case Chain.ETH:
-        return this.fetchEthPrice();
-    }
+    const connector = this.createPriceApiConnector(chain);
+    const result = await connector.fetchCoinPriceUsd();
+    return connector.convertCoinPrice(result);
   }
 
-  private async fetchEthPrice(): Promise<ConnectorCoinPrice> {
-    const connector = this.createPriceApiConnector(Chain.ETH);
-    const result = await connector.fetchEthPriceUsd();
-    return connector.convertEthPrice(result);
-  }
-
-  private async fetchEthBalance(
-    contractAddress: string,
-  ): Promise<ConnectorCoinBalance> {
-    const apiConnector = this.createBalanceApiConnector(Chain.ETH);
-    const ethBalanceData = await apiConnector.fetchEthBalance(contractAddress);
-    if (ethBalanceData.status !== '1') {
-      throw new InternalServerErrorException(
-        'Please check the provided address',
-      );
-    }
-    return EtherscanBalanceFactory.toConnectorCoinBalance(
-      contractAddress,
-      ethBalanceData,
-    );
-  }
-
-  private createBalanceApiConnector(chain: Chain) {
+  private createBalanceApiConnector(chain: Chain): ICoinBalanceConnector {
     switch (chain) {
       case Chain.ETH:
         return new EtherscanConnector(
@@ -63,7 +45,7 @@ export class CoinHelper {
     }
   }
 
-  private createPriceApiConnector(chain: Chain) {
+  private createPriceApiConnector(chain: Chain): ICoinPriceConnector {
     switch (chain) {
       case Chain.ETH:
         return new UniswapConnector();

@@ -1,9 +1,13 @@
-import { IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
+import { Chain } from '../../coin/enum/chain';
 
 export class ConnectorTokenPrice {
   @IsString()
   address: string;
 
   @IsString()
-  priceEth: string;
+  priceInCoin: string;
+
+  @IsEnum(Chain)
+  chain: Chain;
 }

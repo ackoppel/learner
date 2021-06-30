@@ -10,7 +10,8 @@ export class UniswapPriceFactory {
   ): ConnectorTokenPrice {
     const model = new ConnectorTokenPrice();
     model.address = tokenPrice.token.id;
-    model.priceEth = tokenPrice.token.derivedETH;
+    model.priceInCoin = tokenPrice.token.derivedETH;
+    model.chain = Chain.ETH;
     return model;
   }
 

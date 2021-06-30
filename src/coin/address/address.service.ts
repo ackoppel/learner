@@ -38,7 +38,7 @@ export class AddressService {
     });
   }
 
-  // check if address is added by user
+  // check if address is added by user and returns it
   async checkAddress(
     authCredentialsId: string,
     userAddress: string,

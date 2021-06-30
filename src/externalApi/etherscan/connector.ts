@@ -3,6 +3,7 @@ import axios from 'axios';
 import { IEtherscanEthBalance } from './ethBalance/etherscanEthBalance.interface';
 import { ConnectorCoinBalance } from '../model/coinBalance.connector';
 import { EtherscanBalanceFactory } from './ethBalance/etherscanEthBalance.factory';
+import { ICoinBalanceConnector } from '../interface/coinBalanceConnector.interface';
 
 enum Module {
   account = 'account',
@@ -12,12 +13,12 @@ enum Action {
   balance = 'balance',
 }
 
-export class Connector {
+export class Connector implements ICoinBalanceConnector {
   private baseUrl = 'https://api.etherscan.io/api';
 
   constructor(private apiKey: string) {}
 
-  public async fetchEthBalance(
+  public async fetchCoinBalance(
     userAddress: string,
   ): Promise<IEtherscanEthBalance> {
     return this.performRequest(
@@ -25,7 +26,7 @@ export class Connector {
     );
   }
 
-  public convertEthBalance(
+  public convertCoinBalance(
     address: string,
     balance: IEtherscanEthBalance,
   ): ConnectorCoinBalance {
