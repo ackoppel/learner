@@ -18,7 +18,11 @@ export class SyncQueueTaskProcessor implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    // await this.syncQueue.resume();
+    if (!this.configService.get<boolean>('sync.enabled')) {
+      await this.syncQueue.pause();
+    } else {
+      await this.syncQueue.resume();
+    }
   }
 
   @Process(SyncTaskType.SyncPrices)

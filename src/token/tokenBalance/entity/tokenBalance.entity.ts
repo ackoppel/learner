@@ -21,6 +21,7 @@ export class TokenBalance {
 
   @ManyToOne(() => Address, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   @JoinColumn()
   address: Address;

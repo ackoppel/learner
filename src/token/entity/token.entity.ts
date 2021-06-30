@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { TokenBalance } from '../tokenBalance/entity/tokenBalance.entity';
 import { Coin } from '../../coin/entity/coin.entity';
+
 // import { MarketMaker } from '../enum/marketMaker.enum';
 
 @Entity()

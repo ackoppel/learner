@@ -1,6 +1,6 @@
 import { InjectQueue, OnQueueActive, Process, Processor } from '@nestjs/bull';
 import { COIN_UPDATE_QUEUE } from '../constants/constants';
-import { Logger } from '@nestjs/common';
+import { Logger, OnModuleInit } from '@nestjs/common';
 import { Job, Queue } from 'bull';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CoinRepository } from './entity/coin.repository';
@@ -9,9 +9,10 @@ import {
   UpdateCoinTaskType,
 } from './coinUpdateQueueItem.interface';
 import { ConnectorCoinPrice } from '../externalApi/model/coinPrice.connector';
+import { ConfigService } from '@nestjs/config';
 
 @Processor(COIN_UPDATE_QUEUE)
-export class CoinUpdateQueueTaskProcessor {
+export class CoinUpdateQueueTaskProcessor implements OnModuleInit {
   TASK_OK = 'Ok';
   private readonly logger = new Logger(this.constructor.name);
 
@@ -19,7 +20,16 @@ export class CoinUpdateQueueTaskProcessor {
     @InjectQueue(COIN_UPDATE_QUEUE)
     private coinUpdateQueue: Queue<UpdateCoinQueueItem>,
     @InjectRepository(CoinRepository) private coinRepository: CoinRepository,
+    private configService: ConfigService,
   ) {}
+
+  async onModuleInit() {
+    if (!this.configService.get<boolean>('sync.enabled')) {
+      await this.coinUpdateQueue.pause();
+    } else {
+      await this.coinUpdateQueue.resume();
+    }
+  }
 
   @OnQueueActive()
   onActive(job: Job<UpdateCoinQueueItem>) {
@@ -28,8 +38,8 @@ export class CoinUpdateQueueTaskProcessor {
 
   @Process(UpdateCoinTaskType.UpdateCoinPrice)
   async updateCoinPrice(job: Job<UpdateCoinQueueItem>) {
-    const tokenPrice = job.data.payload as ConnectorCoinPrice;
-    await this.coinRepository.injectOrUpdateCoin(tokenPrice);
+    const coinPrice = job.data.payload as ConnectorCoinPrice;
+    await this.coinRepository.injectOrUpdateCoin(coinPrice);
     return this.TASK_OK;
   }
 }

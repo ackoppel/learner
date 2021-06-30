@@ -1,6 +1,6 @@
 import { InjectQueue, OnQueueActive, Process, Processor } from '@nestjs/bull';
 import { TOKEN_UPDATE_QUEUE } from '../constants/constants';
-import { Logger } from '@nestjs/common';
+import { Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenRepository } from './entity/token.repository';
 import {
@@ -9,9 +9,10 @@ import {
 } from './tokenUpdateQueueItem.interface';
 import { Job, Queue } from 'bull';
 import { ConnectorTokenPrice } from '../externalApi/model/tokenPrice.connector';
+import { ConfigService } from '@nestjs/config';
 
 @Processor(TOKEN_UPDATE_QUEUE)
-export class TokenUpdateQueueTaskProcessor {
+export class TokenUpdateQueueTaskProcessor implements OnModuleInit {
   TASK_OK = 'Ok';
   private readonly logger = new Logger(this.constructor.name);
 
@@ -20,7 +21,16 @@ export class TokenUpdateQueueTaskProcessor {
     private tokenUpdateQueue: Queue<UpdateTokenQueueItem>,
     @InjectRepository(TokenRepository)
     private tokenRepository: TokenRepository,
+    private configService: ConfigService,
   ) {}
+
+  async onModuleInit() {
+    if (!this.configService.get<boolean>('sync.enabled')) {
+      await this.tokenUpdateQueue.pause();
+    } else {
+      await this.tokenUpdateQueue.resume();
+    }
+  }
 
   @OnQueueActive()
   onActive(job: Job<UpdateTokenQueueItem>) {

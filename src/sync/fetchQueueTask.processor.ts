@@ -2,7 +2,6 @@ import {
   InjectQueue,
   OnQueueActive,
   OnQueueError,
-  OnQueueWaiting,
   Process,
   Processor,
 } from '@nestjs/bull';
@@ -19,6 +18,7 @@ import {
   SyncCoinPricePayload,
   SyncQueueItem,
   SyncTaskType,
+  SyncTokenBalancePayload,
   SyncTokenPricePayload,
 } from './interface/syncQueueItem.interface';
 import { Job, Queue } from 'bull';
@@ -41,13 +41,12 @@ export class FetchQueueTaskProcessor implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    // await this.fetchQueue.resume();
+    if (!this.configService.get<boolean>('sync.enabled')) {
+      await this.fetchQueue.pause();
+    } else {
+      await this.fetchQueue.resume();
+    }
   }
-
-  // @OnQueueWaiting()
-  // async onWait() {
-  //   console.log('Queue is waitng');
-  // }
 
   @OnQueueActive()
   onActive(job: Job) {
@@ -97,5 +96,20 @@ export class FetchQueueTaskProcessor implements OnModuleInit {
       },
     );
     return this.TASK_OK;
+  }
+
+  @Process(SyncTaskType.SyncTokenBalance)
+  async syncTokenBalance(job: Job<SyncQueueItem>) {
+    const payload = job.data.payload as SyncTokenBalancePayload;
+    const tokenBalance = await this.tokenHelper.fetchExternalTokenBalance(
+      payload.tokenBalance.address.contractAddress,
+      payload.tokenBalance.token.address,
+      payload.tokenBalance.token.coin.name,
+    );
+    await validateOrReject(tokenBalance);
+    await this.tokenUpdateQueue.add(UpdateTokenTaskType.UpdateTokenBalance, {
+      payload: tokenBalance,
+      coin: payload.tokenBalance.token.coin,
+    });
   }
 }

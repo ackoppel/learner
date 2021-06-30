@@ -1,7 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import {
+  EVENT_COIN_BALANCE_SYNC_REQUESTED,
   EVENT_COIN_PRICE_SYNC_REQUESTED,
+  EVENT_TOKEN_BALANCE_SYNC_REQUESTED,
   EVENT_TOKEN_PRICE_SYNC_REQUESTED,
   FETCH_QUEUE,
   SYNC_QUEUE,
@@ -17,9 +19,14 @@ import {
   SyncQueueItem,
   SyncTaskType,
 } from './interface/syncQueueItem.interface';
+import { CronHelper } from './helper/cron.helper';
+import { TokenBalanceRepository } from '../token/tokenBalance/entity/tokenBalance.repository';
+import { AddressRepository } from '../coin/address/entity/address.repository';
+import { SyncCoinBalanceRequestedEvent } from './event/syncCoinBalanceRequested.event';
+import { SyncTokenBalanceRequestedEvent } from './event/syncTokenBalanceRequested.event';
 
 @Injectable()
-export class SyncService {
+export class SyncService implements OnModuleInit {
   private readonly logger = new Logger(this.constructor.name);
 
   constructor(
@@ -29,10 +36,23 @@ export class SyncService {
     private eventEmitter: EventEmitter2,
     private coinService: CoinService,
     private tokenService: TokenService,
+    private cronHelper: CronHelper,
+    private addressRepository: AddressRepository,
+    private tokenBalanceRepository: TokenBalanceRepository,
   ) {}
 
+  async onModuleInit() {
+    if (!this.configService.get<boolean>('sync.enabled')) {
+      await this.cronHelper.pauseSync();
+      this.logger.verbose('Sync service paused');
+    } else {
+      await this.cronHelper.startSync();
+      this.logger.verbose('Starting sync service');
+    }
+  }
+
   async startPriceSync() {
-    this.logger.log('Starting Price Sync');
+    this.logger.verbose('Starting Price Sync');
     const coins = await this.coinService.getCoins();
     const tokens = await this.tokenService.getExistingTokenList();
     coins.forEach((coin) => {
@@ -45,6 +65,24 @@ export class SyncService {
       this.eventEmitter.emit(
         EVENT_TOKEN_PRICE_SYNC_REQUESTED,
         new SyncTokenPriceRequestedEvent(token),
+      );
+    });
+  }
+
+  async startBalanceSync() {
+    this.logger.verbose('Starting Balance Sync');
+    const coinBalances = await this.addressRepository.find();
+    const tokenBalances = await this.tokenBalanceRepository.find();
+    coinBalances.forEach((balance) => {
+      this.eventEmitter.emit(
+        EVENT_COIN_BALANCE_SYNC_REQUESTED,
+        new SyncCoinBalanceRequestedEvent(balance),
+      );
+    });
+    tokenBalances.forEach((tokenBalance) => {
+      this.eventEmitter.emit(
+        EVENT_TOKEN_BALANCE_SYNC_REQUESTED,
+        new SyncTokenBalanceRequestedEvent(tokenBalance),
       );
     });
   }
@@ -74,6 +112,38 @@ export class SyncService {
         payload: {
           token: payload.token,
         },
+      },
+      {
+        removeOnComplete: true,
+      },
+    );
+  }
+
+  @OnEvent(EVENT_TOKEN_BALANCE_SYNC_REQUESTED)
+  async syncTokenBalance(payload: SyncTokenBalanceRequestedEvent) {
+    this.logger.log(
+      `Adding ${payload.tokenBalance.address} to token ${payload.tokenBalance.token.name} balance fetch queue`,
+    );
+    await this.fetchQueue.add(
+      SyncTaskType.SyncTokenBalance,
+      {
+        payload: { tokenBalance: payload.tokenBalance },
+      },
+      {
+        removeOnComplete: true,
+      },
+    );
+  }
+
+  @OnEvent(EVENT_COIN_BALANCE_SYNC_REQUESTED)
+  async syncCoinBalance(payload: SyncCoinBalanceRequestedEvent) {
+    this.logger.log(
+      `Adding ${payload.address.contractAddress} to ${payload.address.coin.name} balance fetch queue`,
+    );
+    await this.fetchQueue.add(
+      SyncTaskType.SyncCoinBalance,
+      {
+        payload: { address: payload.address },
       },
       {
         removeOnComplete: true,

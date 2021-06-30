@@ -15,6 +15,7 @@ import { TokenHelper } from '../token/helper/tokenHelper';
 import { CoinHelper } from '../coin/helper/coinHelper';
 import { SyncService } from './sync.service';
 import { SyncController } from './sync.controller';
+import { CronHelper } from './helper/cron.helper';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { SyncController } from './sync.controller';
     SyncService,
     TokenHelper,
     CoinHelper,
+    CronHelper,
   ],
   controllers: [
     // todo :: probably remove me

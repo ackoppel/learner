@@ -8,12 +8,6 @@ import { TokenModule } from './token/token.module';
 import { CoinModule } from './coin/coin.module';
 import { BullModule } from '@nestjs/bull';
 import { BullBoardModule } from './bullBoard/bullBoard.module';
-import {
-  COIN_UPDATE_QUEUE,
-  FETCH_QUEUE,
-  SYNC_QUEUE,
-  TOKEN_UPDATE_QUEUE,
-} from './constants/constants';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SyncModule } from './sync/sync.module';
 
@@ -40,70 +34,6 @@ import { SyncModule } from './sync/sync.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        name: SYNC_QUEUE,
-        redis: {
-          host: configService.get<string>('redis.host'),
-          port: configService.get<number>('redis.port'),
-          password: configService.get<string>('redis.password'),
-          db: configService.get<number>('redis.db'),
-        },
-        limiter: {
-          max: configService.get<number>('queue.limiter'),
-          duration: configService.get<number>('queue.duration'),
-        },
-        defaultJobOptions: {
-          removeOnComplete: true,
-          removeOnFail: false,
-        },
-      }),
-    }),
-    BullModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        name: FETCH_QUEUE,
-        redis: {
-          host: configService.get<string>('redis.host'),
-          port: configService.get<number>('redis.port'),
-          password: configService.get<string>('redis.password'),
-          db: configService.get<number>('redis.db'),
-        },
-        limiter: {
-          max: configService.get<number>('queue.limiter'),
-          duration: configService.get<number>('queue.duration'),
-        },
-        defaultJobOptions: {
-          removeOnComplete: true,
-          removeOnFail: false,
-        },
-      }),
-    }),
-    BullModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        name: TOKEN_UPDATE_QUEUE,
-        redis: {
-          host: configService.get<string>('redis.host'),
-          port: configService.get<number>('redis.port'),
-          password: configService.get<string>('redis.password'),
-          db: configService.get<number>('redis.db'),
-        },
-        limiter: {
-          max: configService.get<number>('queue.limiter'),
-          duration: configService.get<number>('queue.duration'),
-        },
-        defaultJobOptions: {
-          removeOnComplete: true,
-          removeOnFail: false,
-        },
-      }),
-    }),
-    BullModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        name: COIN_UPDATE_QUEUE,
         redis: {
           host: configService.get<string>('redis.host'),
           port: configService.get<number>('redis.port'),
