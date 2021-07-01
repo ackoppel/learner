@@ -20,7 +20,7 @@ export class Address {
 
   @ManyToOne(() => Profile, (profile) => profile.addresses, {
     onDelete: 'CASCADE',
-    eager: true,
+    // eager: true,
   })
   @JoinColumn({ name: 'profileId' })
   profile: Profile;

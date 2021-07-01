@@ -9,7 +9,7 @@ import { AddressService } from './address/address.service';
 import { AddressController } from './address/address.controller';
 import { ProfileModule } from '../profile/profile.module';
 import { CoinHelper } from './helper/coinHelper';
-import { CoinUpdateQueueTaskProcessor } from './coinUpdateQueueTask.processor';
+import { CoinUpdateQueueTaskProcessor } from './sync/coinUpdateQueueTask.processor';
 import { BullModule } from '@nestjs/bull';
 import { COIN_UPDATE_QUEUE } from '../constants/constants';
 

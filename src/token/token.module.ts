@@ -9,7 +9,7 @@ import { TokenBalanceRepository } from './tokenBalance/entity/tokenBalance.repos
 import { TokenBalanceService } from './tokenBalance/tokenBalance.service';
 import { TokenBalanceController } from './tokenBalance/tokenBalance.controller';
 import { TokenHelper } from './helper/tokenHelper';
-import { TokenUpdateQueueTaskProcessor } from './tokenUpdateQueueTask.processor';
+import { TokenUpdateQueueTaskProcessor } from './sync/tokenUpdateQueueTask.processor';
 import { BullModule } from '@nestjs/bull';
 import { TOKEN_UPDATE_QUEUE } from '../constants/constants';
 

@@ -16,6 +16,9 @@ import { CoinHelper } from '../coin/helper/coinHelper';
 import { SyncService } from './sync.service';
 import { SyncController } from './sync.controller';
 import { CronHelper } from './helper/cron.helper';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AddressRepository } from '../coin/address/entity/address.repository';
+import { TokenBalanceRepository } from '../token/tokenBalance/entity/tokenBalance.repository';
 
 @Module({
   imports: [
@@ -31,6 +34,7 @@ import { CronHelper } from './helper/cron.helper';
     BullModule.registerQueue({
       name: COIN_UPDATE_QUEUE,
     }),
+    TypeOrmModule.forFeature([AddressRepository, TokenBalanceRepository]),
     TokenModule,
     CoinModule,
     ConfigModule,

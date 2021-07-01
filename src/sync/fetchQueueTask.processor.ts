@@ -15,6 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import { TokenHelper } from '../token/helper/tokenHelper';
 import { CoinHelper } from '../coin/helper/coinHelper';
 import {
+  SyncCoinBalancePayload,
   SyncCoinPricePayload,
   SyncQueueItem,
   SyncTaskType,
@@ -23,8 +24,8 @@ import {
 } from './interface/syncQueueItem.interface';
 import { Job, Queue } from 'bull';
 import { validateOrReject } from 'class-validator';
-import { UpdateTokenTaskType } from '../token/tokenUpdateQueueItem.interface';
-import { UpdateCoinTaskType } from '../coin/coinUpdateQueueItem.interface';
+import { UpdateTokenTaskType } from '../token/sync/tokenUpdateQueueItem.interface';
+import { UpdateCoinTaskType } from '../coin/sync/coinUpdateQueueItem.interface';
 
 @Processor(FETCH_QUEUE)
 export class FetchQueueTaskProcessor implements OnModuleInit {
@@ -43,8 +44,10 @@ export class FetchQueueTaskProcessor implements OnModuleInit {
   async onModuleInit() {
     if (!this.configService.get<boolean>('sync.enabled')) {
       await this.fetchQueue.pause();
+      this.logger.warn('Pausing fetch queue');
     } else {
       await this.fetchQueue.resume();
+      this.logger.warn('Resuming fetch queue');
     }
   }
 
@@ -55,7 +58,30 @@ export class FetchQueueTaskProcessor implements OnModuleInit {
 
   @OnQueueError()
   onError(error: Error) {
-    console.log(error);
+    this.logger.error(error);
+  }
+
+  @Process(SyncTaskType.SyncTokenPrice)
+  async syncTokenPrice(job: Job<SyncQueueItem>) {
+    const payload = job.data.payload as SyncTokenPricePayload;
+    const tokenPrice = await this.tokenHelper.fetchExternalTokenPrice(
+      payload.token.address,
+      payload.token.coin.name,
+    );
+    await validateOrReject(tokenPrice);
+    await this.tokenUpdateQueue.add(
+      UpdateTokenTaskType.UpdateTokenPrice,
+      {
+        payload: {
+          tokenPrice,
+          coin: payload.token.coin,
+        },
+      },
+      {
+        removeOnComplete: true,
+      },
+    );
+    return this.TASK_OK;
   }
 
   @Process(SyncTaskType.SyncCoinPrice)
@@ -77,27 +103,6 @@ export class FetchQueueTaskProcessor implements OnModuleInit {
     return this.TASK_OK;
   }
 
-  @Process(SyncTaskType.SyncTokenPrice)
-  async syncTokenPrice(job: Job<SyncQueueItem>) {
-    const payload = job.data.payload as SyncTokenPricePayload;
-    const tokenPrice = await this.tokenHelper.fetchExternalTokenPrice(
-      payload.token.address,
-      payload.token.coin.name,
-    );
-    await validateOrReject(tokenPrice);
-    await this.tokenUpdateQueue.add(
-      UpdateTokenTaskType.UpdateTokenPrice,
-      {
-        payload: tokenPrice,
-        coin: payload.token.coin,
-      },
-      {
-        removeOnComplete: true,
-      },
-    );
-    return this.TASK_OK;
-  }
-
   @Process(SyncTaskType.SyncTokenBalance)
   async syncTokenBalance(job: Job<SyncQueueItem>) {
     const payload = job.data.payload as SyncTokenBalancePayload;
@@ -107,9 +112,37 @@ export class FetchQueueTaskProcessor implements OnModuleInit {
       payload.tokenBalance.token.coin.name,
     );
     await validateOrReject(tokenBalance);
-    await this.tokenUpdateQueue.add(UpdateTokenTaskType.UpdateTokenBalance, {
-      payload: tokenBalance,
-      coin: payload.tokenBalance.token.coin,
-    });
+    await this.tokenUpdateQueue.add(
+      UpdateTokenTaskType.UpdateTokenBalance,
+      {
+        payload: {
+          tokenBalance: payload.tokenBalance,
+          update: tokenBalance,
+        },
+      },
+      { removeOnComplete: true },
+    );
+    return this.TASK_OK;
+  }
+
+  @Process(SyncTaskType.SyncCoinBalance)
+  async syncCoinBalance(job: Job<SyncQueueItem>) {
+    const payload = job.data.payload as SyncCoinBalancePayload;
+    const coinBalance = await this.coinHelper.fetchExternalCoinBalance(
+      payload.address.contractAddress,
+      payload.address.coin.name,
+    );
+    await validateOrReject(coinBalance);
+    await this.coinUpdateQueue.add(
+      UpdateCoinTaskType.UpdateCoinBalance,
+      {
+        payload: {
+          update: coinBalance,
+          address: payload.address,
+        },
+      },
+      { removeOnComplete: true },
+    );
+    return this.TASK_OK;
   }
 }

@@ -22,11 +22,20 @@ export class CronHelper {
         cron: this.configService.get<string>('cron.price'),
       },
     });
+    await this.syncQueue.add(SyncTaskType.SyncBalances, undefined, {
+      removeOnComplete: true,
+      repeat: {
+        cron: this.configService.get<string>('cron.balance'),
+      },
+    });
   }
 
   async pauseSync() {
     await this.syncQueue.removeRepeatable(SyncTaskType.SyncPrices, {
       cron: this.configService.get<string>('cron.price'),
+    });
+    await this.syncQueue.removeRepeatable(SyncTaskType.SyncBalances, {
+      cron: this.configService.get<string>('cron.balance'),
     });
   }
 }

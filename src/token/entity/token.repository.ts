@@ -40,8 +40,6 @@ export class TokenRepository extends Repository<Token> {
     tokenPrice: ConnectorTokenPrice,
     coin: Coin,
   ): Promise<Token> {
-    // console.log('COIN:: ', coin);
-    // console.log('TOKEN PRICE:: ', tokenPrice);
     const model = await this.findOne({
       address: tokenPrice.address,
       coin,

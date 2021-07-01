@@ -33,4 +33,11 @@ export class AddressRepository extends Repository<Address> {
       return this.save(model);
     }
   }
+
+  async getAllAddressesForSync() {
+    return this.createQueryBuilder('a')
+      .innerJoinAndSelect('a.profile', 'p')
+      .innerJoinAndSelect('a.coin', 'c')
+      .getMany();
+  }
 }

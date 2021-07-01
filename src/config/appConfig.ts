@@ -5,7 +5,7 @@ export const appConfig = () => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    port: process.env.DB_PORT,
+    port: parseInt(process.env.DB_PORT),
     host: process.env.DB_HOST,
   },
   jwt: {
@@ -25,14 +25,14 @@ export const appConfig = () => ({
     enabled: ConfigHelper.stringToBoolean(process.env.SYNC),
   },
   queue: {
-    limiter: process.env.QUEUE_LIMITER,
-    duration: process.env.QUEUE_LIMITER_DURATION,
+    limiter: parseInt(process.env.QUEUE_LIMITER),
+    duration: parseInt(process.env.QUEUE_LIMITER_DURATION),
   },
   redis: {
     host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
+    port: parseInt(process.env.REDIS_PORT),
     password: process.env.REDIS_PASSWORD,
-    db: process.env.REDIS_DB,
+    db: parseInt(process.env.REDIS_DB),
   },
   cron: {
     price: process.env.PRICE_CRON,

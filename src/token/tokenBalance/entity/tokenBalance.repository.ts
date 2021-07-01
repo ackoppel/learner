@@ -31,4 +31,12 @@ export class TokenBalanceRepository extends Repository<TokenBalance> {
       return this.save(model);
     }
   }
+
+  async getAllBalancesForSync() {
+    return this.createQueryBuilder('tb')
+      .leftJoinAndSelect('tb.token', 't')
+      .leftJoinAndSelect('t.coin', 'c')
+      .leftJoinAndSelect('tb.address', 'a')
+      .getMany();
+  }
 }

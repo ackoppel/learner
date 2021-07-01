@@ -22,18 +22,27 @@ export class AddressController {
 
   @Get()
   @UseGuards(JwtGuard)
-  async getUserAddressList(
+  async getProfileAddressList(
     @Request() req: IRequest,
     @Query() query: GetAddressQuery,
   ): Promise<AddressResponseDto | AddressResponseDto[]> {
     switch (true) {
-      // query was provided
+      // chain and address were provided in query
       case !!query.chain && !!query.contract:
         return plainToClass(
           AddressResponseDto,
           await this.addressService.checkAddress(
             req.user.getAuthCredentialsId(),
             query.contract,
+            query.chain,
+          ),
+        );
+      // only chain was provided in query
+      case !!query.chain && !query.contract:
+        return plainToClass(
+          AddressResponseDto,
+          await this.addressService.getProfileChainAddressList(
+            req.user.getAuthCredentialsId(),
             query.chain,
           ),
         );

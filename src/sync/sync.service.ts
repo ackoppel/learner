@@ -24,6 +24,7 @@ import { TokenBalanceRepository } from '../token/tokenBalance/entity/tokenBalanc
 import { AddressRepository } from '../coin/address/entity/address.repository';
 import { SyncCoinBalanceRequestedEvent } from './event/syncCoinBalanceRequested.event';
 import { SyncTokenBalanceRequestedEvent } from './event/syncTokenBalanceRequested.event';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class SyncService implements OnModuleInit {
@@ -37,7 +38,9 @@ export class SyncService implements OnModuleInit {
     private coinService: CoinService,
     private tokenService: TokenService,
     private cronHelper: CronHelper,
+    @InjectRepository(AddressRepository)
     private addressRepository: AddressRepository,
+    @InjectRepository(TokenBalanceRepository)
     private tokenBalanceRepository: TokenBalanceRepository,
   ) {}
 
@@ -50,6 +53,8 @@ export class SyncService implements OnModuleInit {
       this.logger.verbose('Starting sync service');
     }
   }
+
+  // todo :: think about token logo sync
 
   async startPriceSync() {
     this.logger.verbose('Starting Price Sync');
@@ -71,8 +76,9 @@ export class SyncService implements OnModuleInit {
 
   async startBalanceSync() {
     this.logger.verbose('Starting Balance Sync');
-    const coinBalances = await this.addressRepository.find();
-    const tokenBalances = await this.tokenBalanceRepository.find();
+    const coinBalances = await this.addressRepository.getAllAddressesForSync();
+    const tokenBalances =
+      await this.tokenBalanceRepository.getAllBalancesForSync();
     coinBalances.forEach((balance) => {
       this.eventEmitter.emit(
         EVENT_COIN_BALANCE_SYNC_REQUESTED,
@@ -122,7 +128,7 @@ export class SyncService implements OnModuleInit {
   @OnEvent(EVENT_TOKEN_BALANCE_SYNC_REQUESTED)
   async syncTokenBalance(payload: SyncTokenBalanceRequestedEvent) {
     this.logger.log(
-      `Adding ${payload.tokenBalance.address} to token ${payload.tokenBalance.token.name} balance fetch queue`,
+      `Adding ${payload.tokenBalance.address.contractAddress} to token ${payload.tokenBalance.token.name} balance fetch queue`,
     );
     await this.fetchQueue.add(
       SyncTaskType.SyncTokenBalance,

@@ -38,6 +38,16 @@ export class AddressService {
     });
   }
 
+  async getProfileChainAddressList(
+    authCredentialsId: string,
+    chain: Chain,
+  ): Promise<Address[]> {
+    return this.addressRepository.find({
+      profile: await this.profileService.getProfile(authCredentialsId),
+      coin: await this.coinService.getCoin(chain),
+    });
+  }
+
   // check if address is added by user and returns it
   async checkAddress(
     authCredentialsId: string,
