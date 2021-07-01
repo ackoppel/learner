@@ -48,6 +48,19 @@ export class AddressService {
     });
   }
 
+  async removeAddress(
+    authCredentialsId: string,
+    userAddress: string,
+    chain: Chain,
+  ): Promise<void> {
+    const address = await this.checkAddress(
+      authCredentialsId,
+      userAddress,
+      chain,
+    );
+    await this.addressRepository.remove(address);
+  }
+
   // check if address is added by user and returns it
   async checkAddress(
     authCredentialsId: string,

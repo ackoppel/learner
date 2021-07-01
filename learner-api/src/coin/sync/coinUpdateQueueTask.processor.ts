@@ -45,7 +45,7 @@ export class CoinUpdateQueueTaskProcessor implements OnModuleInit {
 
   @OnQueueActive()
   onActive(job: Job<UpdateCoinQueueItem>) {
-    this.logger.log(`Processing update with data: ${job.data}`);
+    this.logger.log(`Processing update with data: ${JSON.stringify(job.data)}`);
   }
 
   @OnQueueError()

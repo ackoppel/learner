@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ProfileRepository } from './enitity/profile.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthCredentials } from '../auth/entity/auth-credentials.entity';
 import { UpdateProfileRequestDto } from './dto/updateProfileRequest.dto';
 import { Profile } from './enitity/profile.entity';
 import { AuthCredentialsRepository } from '../auth/auth-credentials.repository';
+import { AuthService } from '../auth/auth.service';
+import { TokenProfileResponseDto } from '../auth/dto/tokenProfileResponse.dto';
 
 @Injectable()
 export class ProfileService {
@@ -13,17 +14,23 @@ export class ProfileService {
     private profileRepository: ProfileRepository,
     @InjectRepository(AuthCredentialsRepository)
     private authCredentialRepository: AuthCredentialsRepository,
+    private authService: AuthService,
   ) {}
 
-  async createProfile(authCredentials: AuthCredentials): Promise<void> {
-    return this.profileRepository.createProfile(authCredentials);
+  async getProfileWithAccessToken(
+    authCredentialsId: string,
+  ): Promise<TokenProfileResponseDto> {
+    return this.authService.prepareTokenPayload(
+      await this.getProfile(authCredentialsId),
+    );
   }
 
   async getProfile(authCredentialsId: string): Promise<Profile> {
-    const authCredentials = await this.authCredentialRepository.findOne({
-      id: authCredentialsId,
+    return this.profileRepository.findOne({
+      authCredentials: await this.authCredentialRepository.findOne({
+        id: authCredentialsId,
+      }),
     });
-    return this.profileRepository.findOne({ authCredentials });
   }
 
   async updateProfile(

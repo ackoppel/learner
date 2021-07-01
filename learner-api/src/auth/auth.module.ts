@@ -34,6 +34,7 @@ import { ProfileModule } from '../profile/profile.module';
     JwtStrategy,
     PassportModule,
     TypeOrmModule.forFeature([AuthCredentialsRepository]),
+    AuthService,
   ],
 })
 export class AuthModule {}

@@ -14,6 +14,6 @@ import { ConfigModule } from '@nestjs/config';
   ],
   providers: [ProfileService],
   controllers: [ProfileController],
-  exports: [ProfileService],
+  exports: [ProfileService, TypeOrmModule.forFeature([ProfileRepository])],
 })
 export class ProfileModule {}

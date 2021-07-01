@@ -6,14 +6,18 @@ import * as bcrypt from 'bcrypt';
 import { LoginCredentialsDto } from './dto/loginCredentials.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt.payload';
-import { ProfileService } from '../profile/profile.service';
+import { ProfileRepository } from '../profile/enitity/profile.repository';
+import { plainToClass } from 'class-transformer';
+import { TokenProfileResponseDto } from './dto/tokenProfileResponse.dto';
+import { Profile } from '../profile/enitity/profile.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(AuthCredentialsRepository)
     private authCredentialsRepository: AuthCredentialsRepository,
-    private profileService: ProfileService,
+    @InjectRepository(ProfileRepository)
+    private profileRepository: ProfileRepository,
     private jwtService: JwtService,
   ) {}
 
@@ -21,21 +25,33 @@ export class AuthService {
     const user = await this.authCredentialsRepository.createUser(
       authCredentialsDto,
     );
-    await this.profileService.createProfile(user);
+    await this.profileRepository.createProfile(user);
   }
 
   async login(
     loginCredentialsDto: LoginCredentialsDto,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<TokenProfileResponseDto> {
     const { username, password } = loginCredentialsDto;
     const user = await this.authCredentialsRepository.findOne({
       username,
     });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload: JwtPayload = { username };
-      const accessToken = await this.jwtService.sign(payload);
-      return { accessToken };
+      return this.prepareTokenPayload(
+        await this.profileRepository.findOne({
+          authCredentials: user,
+        }),
+      );
     }
     throw new UnauthorizedException('Please check your login credentials');
+  }
+
+  async prepareTokenPayload(
+    profile: Profile,
+  ): Promise<TokenProfileResponseDto> {
+    const payload: JwtPayload = { username: profile.authCredentials.username };
+    return plainToClass(TokenProfileResponseDto, {
+      accessToken: await this.jwtService.sign(payload),
+      profile,
+    });
   }
 }

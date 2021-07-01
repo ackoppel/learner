@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
@@ -15,6 +16,7 @@ import { plainToClass } from 'class-transformer';
 import { AddAddressDto } from './dto/addAddress.dto';
 import { AddAddressResponseDto } from './dto/addAddressResponse.dto';
 import { GetAddressQuery } from './query/getAddress.query';
+import { DeleteAddressQuery } from './query/deleteAddress.query';
 
 @Controller('address')
 export class AddressController {
@@ -69,6 +71,19 @@ export class AddressController {
         addAddressDto,
         req.user.getAuthCredentialsId(),
       ),
+    );
+  }
+
+  @Delete()
+  @UseGuards(JwtGuard)
+  async removeAddress(
+    @Request() req: IRequest,
+    @Query() query: DeleteAddressQuery,
+  ): Promise<void> {
+    await this.addressService.removeAddress(
+      req.user.getAuthCredentialsId(),
+      query.contract,
+      query.chain,
     );
   }
 }

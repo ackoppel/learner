@@ -12,6 +12,7 @@ import { IRequest } from '../auth/interface/request';
 import { UpdateProfileRequestDto } from './dto/updateProfileRequest.dto';
 import { ProfileResponseDto } from './dto/profileResponse.dto';
 import { plainToClass } from 'class-transformer';
+import { TokenProfileResponseDto } from '../auth/dto/tokenProfileResponse.dto';
 
 @Controller('profile')
 export class ProfileController {
@@ -19,10 +20,9 @@ export class ProfileController {
 
   @Get()
   @UseGuards(JwtGuard)
-  async getProfile(@Request() req: IRequest): Promise<ProfileResponseDto> {
-    return plainToClass(
-      ProfileResponseDto,
-      await this.profileService.getProfile(req.user.getAuthCredentialsId()),
+  async getProfile(@Request() req: IRequest): Promise<TokenProfileResponseDto> {
+    return this.profileService.getProfileWithAccessToken(
+      req.user.getAuthCredentialsId(),
     );
   }
 

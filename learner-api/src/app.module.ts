@@ -10,11 +10,13 @@ import { BullModule } from '@nestjs/bull';
 import { BullBoardModule } from './bullBoard/bullBoard.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SyncModule } from './sync/sync.module';
+import { configValidationSchema } from './config/config.schema';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [appConfig],
+      validationSchema: configValidationSchema,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
