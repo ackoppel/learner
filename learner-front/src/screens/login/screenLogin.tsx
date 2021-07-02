@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
 import { AuthContext } from "../../components/auth/AuthContext";
-import { LoginForm } from "./loginForm";
+import { LoginForm } from "./form/loginForm";
+import { Logo } from "../../components/logo/logo";
+import "./screenLogin.css";
 
-export const ScreenLogin: React.FC<RouteComponentProps> = ({ history }) => {
+export const ScreenLogin: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { loginHandler } = useContext(AuthContext);
 
@@ -19,7 +20,11 @@ export const ScreenLogin: React.FC<RouteComponentProps> = ({ history }) => {
 
   return (
     <div className="login">
-      <LoginForm onSubmit={onSubmit} errorMessage={errorMessage} />
+      <Logo />
+      <div className="wrapper">
+        <Logo showText={true} />
+        <LoginForm onSubmit={onSubmit} errorMessage={errorMessage} />
+      </div>
     </div>
   );
 };

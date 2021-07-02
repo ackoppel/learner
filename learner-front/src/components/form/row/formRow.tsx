@@ -7,6 +7,7 @@ interface IProps {
   value: string;
   onChange: (value: string) => void;
   size: "large";
+  required?: boolean;
 }
 
 export const FormRow: React.FC<IProps> = ({
@@ -23,6 +24,7 @@ export const FormRow: React.FC<IProps> = ({
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      required={true}
     />
   );
 };

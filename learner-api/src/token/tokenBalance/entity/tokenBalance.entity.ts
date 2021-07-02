@@ -30,4 +30,7 @@ export class TokenBalance {
 
   @Column({ type: 'timestamp' })
   lastSync: Date;
+
+  @Column({ type: 'timestamp', default: new Date() })
+  dateAdded: Date;
 }

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { FormRow } from "../../components/form/formRow";
+import React, { useState, useEffect } from 'react';
+import { FormRow } from '../../components/form/row/formRow';
+import { FormButton } from '../../components/form/button/formButton';
 
 export interface IRegisterCredentials {
   username: string;
@@ -13,9 +14,9 @@ interface IProps {
 }
 
 const initialState = {
-  username: "",
-  password: "",
-  rePassword: "",
+  username: '',
+  password: '',
+  rePassword: '',
 };
 
 export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
@@ -37,8 +38,8 @@ export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
     >
       {errorMessage && <p>{errorMessage}</p>}
       <FormRow
-        type="text"
-        placeholder="username"
+        type='text'
+        placeholder='Username'
         value={credentials.username}
         onChange={(value) =>
           setCredentials((prev) => ({
@@ -46,11 +47,11 @@ export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
             username: value,
           }))
         }
-        size="large"
+        size='large'
       />
       <FormRow
-        type="password"
-        placeholder="password"
+        type='password'
+        placeholder='Password'
         value={credentials.password}
         onChange={(value) =>
           setCredentials((prev) => ({
@@ -58,11 +59,11 @@ export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
             password: value,
           }))
         }
-        size="large"
+        size='large'
       />
       <FormRow
-        type="password"
-        placeholder="password again"
+        type='password'
+        placeholder='Password again'
         value={credentials.rePassword}
         onChange={(value) =>
           setCredentials((prev) => ({
@@ -70,9 +71,9 @@ export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
             rePassword: value,
           }))
         }
-        size="large"
+        size='large'
       />
-      <button type="submit">Register</button>
+      <FormButton text='Register' type='submit' size='large' />
     </form>
   );
 };

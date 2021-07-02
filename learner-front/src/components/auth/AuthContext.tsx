@@ -1,6 +1,7 @@
-import React, { createContext, useEffect } from "react";
-import { useLogin } from "../../hooks/apiRequest/useLogin";
-import { useFetchProfile } from "./useFetchProfile";
+import React, { createContext, useEffect } from 'react';
+import { useLogin } from '../../hooks/apiRequest/useLogin';
+import { useFetchProfile } from './useFetchProfile';
+import { useLocation } from 'react-router-dom';
 
 export interface ITokenBalance {
   balanceId: string;
@@ -44,7 +45,7 @@ export interface IAuthContext {
   token: string | null;
   loginHandler: (
     username: string,
-    password: string
+    password: string,
   ) => Promise<IUserIdentity | { error: string }>;
   logoutHandler: () => void;
   profile?: IProfile | null;
@@ -54,10 +55,10 @@ export const AuthContext = createContext<IAuthContext>({
   isAuthenticated: false,
   token: null,
   loginHandler: async () => {
-    return { error: "Not Implemented" };
+    return { error: 'Not Implemented' };
   },
   logoutHandler: async () => {
-    throw new Error("Not implemented");
+    throw new Error('Not implemented');
   },
 });
 
@@ -79,32 +80,33 @@ const getValuesFromProfile = (identity: IUserIdentity | null) => {
 const AuthContextProvider: React.FC = ({ children }) => {
   const { profile, fetchProfile, setProfile } = useFetchProfile();
   const { login } = useLogin();
+  const location = useLocation();
 
   const loginHandler = async (
     username: string,
-    password: string
+    password: string,
   ): Promise<IUserIdentity | { error: string }> => {
     try {
       const identity = await login(username, password);
       storeIdentity(identity);
       return identity;
     } catch (e) {
-      return { error: "Incorrect username or password" };
+      return { error: 'Incorrect username or password' };
     }
   };
 
   const logoutHandler = () => {
-    localStorage.removeItem("identity");
+    localStorage.removeItem('identity');
   };
 
   const storeIdentity = (identity: IUserIdentity) => {
-    localStorage.setItem("identity", JSON.stringify(identity));
+    localStorage.setItem('identity', JSON.stringify(identity));
     setProfile(identity);
   };
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [location.pathname]);
 
   return (
     <AuthContext.Provider

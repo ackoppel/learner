@@ -39,4 +39,16 @@ export class TokenBalanceRepository extends Repository<TokenBalance> {
       .leftJoinAndSelect('tb.address', 'a')
       .getMany();
   }
+
+  async deleteEmptyBalances() {
+    const balances = await this.getEmptyBalances();
+    await this.remove(balances);
+  }
+
+  private async getEmptyBalances() {
+    return this.createQueryBuilder('tb')
+      .where("tb.balance = '0'")
+      .andWhere("tb.dateAdded <= (NOW() - INTERVAL '1800 seconds')")
+      .getMany();
+  }
 }
