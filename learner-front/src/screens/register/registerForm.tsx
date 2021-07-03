@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { FormRow } from '../../components/form/row/formRow';
-import { FormButton } from '../../components/form/button/formButton';
+import React, { useState, useEffect } from "react";
+import { FormRow } from "../../components/form/row/formRow";
+import { FormButton } from "../../components/form/button/formButton";
+import "./registerForm.css";
 
 export interface IRegisterCredentials {
   username: string;
@@ -14,9 +15,9 @@ interface IProps {
 }
 
 const initialState = {
-  username: '',
-  password: '',
-  rePassword: '',
+  username: "",
+  password: "",
+  rePassword: "",
 };
 
 export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
@@ -31,6 +32,7 @@ export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
 
   return (
     <form
+      className="register-form"
       onSubmit={async (e) => {
         e.preventDefault();
         await onSubmit(credentials);
@@ -38,8 +40,8 @@ export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
     >
       {errorMessage && <p>{errorMessage}</p>}
       <FormRow
-        type='text'
-        placeholder='Username'
+        type="text"
+        placeholder="Username"
         value={credentials.username}
         onChange={(value) =>
           setCredentials((prev) => ({
@@ -47,11 +49,11 @@ export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
             username: value,
           }))
         }
-        size='large'
+        size="large"
       />
       <FormRow
-        type='password'
-        placeholder='Password'
+        type="password"
+        placeholder="Password"
         value={credentials.password}
         onChange={(value) =>
           setCredentials((prev) => ({
@@ -59,11 +61,11 @@ export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
             password: value,
           }))
         }
-        size='large'
+        size="large"
       />
       <FormRow
-        type='password'
-        placeholder='Password again'
+        type="password"
+        placeholder="Password again"
         value={credentials.rePassword}
         onChange={(value) =>
           setCredentials((prev) => ({
@@ -71,9 +73,9 @@ export const RegisterForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
             rePassword: value,
           }))
         }
-        size='large'
+        size="large"
       />
-      <FormButton text='Register' type='submit' size='large' />
+      <FormButton text="Register" type="submit" size="large" />
     </form>
   );
 };

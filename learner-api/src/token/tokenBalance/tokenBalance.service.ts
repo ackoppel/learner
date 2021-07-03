@@ -55,6 +55,22 @@ export class TokenBalanceService {
     });
   }
 
+  async removeUserAddressTokenBalance(
+    authCredentialsId: string,
+    userAddress: string,
+    tokenAddress: string,
+    chain: Chain,
+  ): Promise<void> {
+    await this.tokenBalanceRepository.remove(
+      await this.getUserAddressTokenBalance(
+        authCredentialsId,
+        userAddress,
+        tokenAddress,
+        chain,
+      ),
+    );
+  }
+
   async fetchAndInsertTokenBalance(
     address: Address,
     token: Token,

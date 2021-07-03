@@ -1,4 +1,4 @@
-.login-form {
+.register-form {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -10,7 +10,7 @@
     height: 190px;
 }
 
-.login-form p {
+.register-form p {
     color: red;
     font-size: 12px;
 }

@@ -21,9 +21,7 @@ export class Connector implements ICoinBalanceConnector {
   public async fetchCoinBalance(
     userAddress: string,
   ): Promise<IEtherscanEthBalance> {
-    return this.performRequest(
-      this.toEthBalanceEndpoint(Module.account, Action.balance, userAddress),
-    );
+    return this.performRequest(this.toEthBalanceEndpoint(userAddress));
   }
 
   public convertCoinBalance(
@@ -43,11 +41,7 @@ export class Connector implements ICoinBalanceConnector {
     }
   }
 
-  private toEthBalanceEndpoint(
-    module: Module,
-    action: Action,
-    userAddress: string,
-  ) {
-    return `?module=${module}&action=${action}&address=${userAddress}&tag=latest&apiKey=${this.apiKey}`;
+  private toEthBalanceEndpoint(userAddress: string) {
+    return `?module=${Module.account}&action=${Action.balance}&address=${userAddress}&tag=latest&apiKey=${this.apiKey}`;
   }
 }

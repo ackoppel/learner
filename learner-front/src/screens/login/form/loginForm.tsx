@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import './loginForm.css';
-import { FormRow } from '../../../components/form/row/formRow';
-import { useHistory } from 'react-router-dom';
-import { FormButton } from '../../../components/form/button/formButton';
+import React, { useState, useEffect } from "react";
+import "./loginForm.css";
+import { FormRow } from "../../../components/form/row/formRow";
+import { useHistory } from "react-router-dom";
+import { FormButton } from "../../../components/form/button/formButton";
 
 export interface ILoginCredentials {
   username: string;
@@ -15,8 +15,8 @@ interface IProps {
 }
 
 const initialState = {
-  username: '',
-  password: '',
+  username: "",
+  password: "",
 };
 
 export const LoginForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
@@ -32,6 +32,7 @@ export const LoginForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
 
   return (
     <form
+      className="login-form"
       onSubmit={async (e) => {
         e.preventDefault();
         await onSubmit(credentials.username, credentials.password);
@@ -39,33 +40,29 @@ export const LoginForm: React.FC<IProps> = ({ onSubmit, errorMessage }) => {
     >
       {errorMessage && <p>{errorMessage}</p>}
       <FormRow
-        type='text'
-        placeholder='Username'
+        type="text"
+        placeholder="Username"
         value={credentials.username}
         onChange={(value) =>
           setCredentials((prev) => ({ ...prev, username: value }))
         }
-        size='large'
+        size="large"
       />
       <FormRow
-        type='password'
-        placeholder='Password'
+        type="password"
+        placeholder="Password"
         value={credentials.password}
         onChange={(value) =>
           setCredentials((prev) => ({ ...prev, password: value }))
         }
-        size='large'
+        size="large"
       />
+      <FormButton text="Login" type="submit" size="large" />
       <FormButton
-        text='Login'
-        type='submit'
-        size='large'
-      />
-      <FormButton
-        text='Create an account'
-        type='button'
-        size='large'
-        onClick={() => history.push('/register')}
+        text="Create an account"
+        type="button"
+        size="large"
+        onClick={() => history.push("/register")}
       />
     </form>
   );

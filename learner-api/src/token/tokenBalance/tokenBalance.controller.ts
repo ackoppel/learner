@@ -1,10 +1,18 @@
-import { Controller, Get, UseGuards, Request, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Request,
+  Query,
+  Delete,
+} from '@nestjs/common';
 import { TokenBalanceService } from './tokenBalance.service';
 import { JwtGuard } from '../../auth/jwtGuard';
 import { IRequest } from '../../auth/interface/request';
 import { plainToClass } from 'class-transformer';
 import { TokenBalanceResponseDto } from './dto/tokenBalanceResponse.dto';
 import { GetTokenBalanceQuery } from './query/getTokenBalance.query';
+import { DeleteTokenBalanceQuery } from './query/deleteTokenBalance.query';
 
 @Controller('token-balance')
 export class TokenBalanceController {
@@ -39,5 +47,19 @@ export class TokenBalanceController {
           ),
         );
     }
+  }
+
+  @Delete()
+  @UseGuards(JwtGuard)
+  async removeTokenBalance(
+    @Request() req: IRequest,
+    @Query() query: DeleteTokenBalanceQuery,
+  ): Promise<void> {
+    return this.tokenBalanceService.removeUserAddressTokenBalance(
+      req.user.getAuthCredentialsId(),
+      query.userAddress,
+      query.tokenAddress,
+      query.chain,
+    );
   }
 }

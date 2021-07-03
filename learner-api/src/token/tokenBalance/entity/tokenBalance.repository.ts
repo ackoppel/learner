@@ -16,6 +16,7 @@ export class TokenBalanceRepository extends Repository<TokenBalance> {
       token,
       address,
       lastSync: new Date(),
+      dateAdded: new Date(),
     });
     const existingModel = await this.findOne({
       token,
@@ -40,9 +41,10 @@ export class TokenBalanceRepository extends Repository<TokenBalance> {
       .getMany();
   }
 
-  async deleteEmptyBalances() {
+  async deleteEmptyBalances(): Promise<number> {
     const balances = await this.getEmptyBalances();
     await this.remove(balances);
+    return balances.length;
   }
 
   private async getEmptyBalances() {

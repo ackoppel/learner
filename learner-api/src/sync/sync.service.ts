@@ -76,7 +76,10 @@ export class SyncService implements OnModuleInit {
 
   async startBalanceSync() {
     this.logger.verbose('Starting Balance Sync');
-    await this.tokenBalanceRepository.deleteEmptyBalances();
+    // todo :: think deleting empty balance requirements through
+    this.logger.verbose(
+      `${await this.tokenBalanceRepository.deleteEmptyBalances()} empty balances deleted`,
+    );
     const coinBalances = await this.addressRepository.getAllAddressesForSync();
     const tokenBalances =
       await this.tokenBalanceRepository.getAllBalancesForSync();
