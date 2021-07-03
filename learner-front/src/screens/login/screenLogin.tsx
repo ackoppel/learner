@@ -4,7 +4,7 @@ import { LoginForm } from "./form/loginForm";
 import { Logo } from "../../components/logo/logo";
 import "./screenLogin.css";
 
-export const ScreenLogin: React.FC = () => {
+const ScreenLogin: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { loginHandler } = useContext(AuthContext);
 
@@ -28,3 +28,5 @@ export const ScreenLogin: React.FC = () => {
     </div>
   );
 };
+
+export default ScreenLogin;

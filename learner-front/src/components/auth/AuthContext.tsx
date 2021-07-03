@@ -1,7 +1,7 @@
 import React, { createContext, useEffect } from "react";
 import { useLogin } from "../../hooks/apiRequest/useLogin";
 import { useFetchProfile } from "./useFetchProfile";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 export interface ITokenBalance {
   balanceId: string;
@@ -81,6 +81,7 @@ const AuthContextProvider: React.FC = ({ children }) => {
   const { profile, fetchProfile, setProfile } = useFetchProfile();
   const { login } = useLogin();
   const location = useLocation();
+  const history = useHistory();
 
   const loginHandler = async (
     username: string,
@@ -97,6 +98,7 @@ const AuthContextProvider: React.FC = ({ children }) => {
 
   const logoutHandler = () => {
     localStorage.removeItem("identity");
+    history.push("/login");
   };
 
   const storeIdentity = (identity: IUserIdentity) => {

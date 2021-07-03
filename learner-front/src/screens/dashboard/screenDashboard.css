@@ -1,0 +1,12 @@
+.dashboard {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.dashboard h3 {
+    color: #474646;
+    font-size: 12px;
+}

@@ -1,0 +1,16 @@
+header {
+    display: flex;
+    height: 50px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h2 {
+    margin-left: 20px;
+}
+
+header .logout {
+    width: 100px;
+    margin-right: 8px;
+}
