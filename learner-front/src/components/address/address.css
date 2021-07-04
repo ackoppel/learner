@@ -1,0 +1,34 @@
+.address {
+    width: 100%;
+    background: linear-gradient(160deg, rgb(197, 151, 252) 0%, rgba(252, 181, 181, 0.5) 58%, rgba(157, 245, 237, 0.5) 100%);
+    color: white;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+    display: flex;
+}
+
+.address-info {
+    width: 50%;
+}
+
+.address-coin-logo {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.address-coin-logo img {
+    height: 90px;
+    width: 90px;
+    margin-right: 10px;
+}
+
+.address:hover {
+    background: linear-gradient(160deg, rgb(205, 166, 252) 0%, rgba(252, 200, 200, 0.5) 58%, rgba(182, 250, 245, 0.5) 100%);
+}
+
+.selected {
+    box-shadow: 0px 0px 5px rgba(47, 4, 142, 0.58);
+}

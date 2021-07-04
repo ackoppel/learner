@@ -1,0 +1,21 @@
+.address-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 45%;
+}
+
+.address-list-add {
+    height: 128px;
+    background-color: #efeeee;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    color: #7d7979;
+}
+
+.address-list-add:hover {
+    background-color: #eae7e7;
+}

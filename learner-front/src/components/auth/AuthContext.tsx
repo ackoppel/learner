@@ -9,6 +9,7 @@ export interface ITokenBalance {
   name: string;
   symbol: string;
   priceInCoin: string;
+  priceUsd: string;
   lastPriceSync: Date;
   balanceConverted: number;
   balanceValueUsd: number;
@@ -20,6 +21,7 @@ export interface IAddress {
   id: string;
   contractAddress: string;
   coinBalance: number;
+  coinName: string;
   coinPriceUsd: number;
   coinPriceLastSync: Date;
   totalBalanceUsd: number;
@@ -48,7 +50,7 @@ export interface IAuthContext {
     password: string
   ) => Promise<{ success: boolean } | { error: string }>;
   logoutHandler: () => void;
-  profile?: IProfile | null;
+  profile: IProfile | null;
 }
 
 export const AuthContext = createContext<IAuthContext>({
@@ -60,6 +62,7 @@ export const AuthContext = createContext<IAuthContext>({
   logoutHandler: async () => {
     throw new Error("Not implemented");
   },
+  profile: null,
 });
 
 const getValuesFromProfile = (identity: IUserIdentity | null) => {

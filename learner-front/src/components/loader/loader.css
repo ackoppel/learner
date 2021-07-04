@@ -1,5 +1,5 @@
 .loader {
-    position: absolute;
+    position: fixed;
     height: 100vh;
     width: 100vw;
     display: flex;
@@ -7,4 +7,8 @@
     justify-content: center;
     color: black;
     background-color: white;
+}
+
+.loader h1 {
+    font-size: 24px;
 }

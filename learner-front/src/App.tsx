@@ -18,7 +18,7 @@ function App() {
 
   return (
     <div className="App">
-      <React.Suspense fallback={Loader}>
+      <React.Suspense fallback={<Loader />}>
         <Switch>
           <AppRoute
             path="/login"
