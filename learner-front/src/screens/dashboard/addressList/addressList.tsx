@@ -9,7 +9,7 @@ import { AddAddress } from "./addAddress/addAddress";
 interface IProps {
   addresses?: IAddress[];
   onSelect: (address: IAddress) => void;
-  onAddAddress?: () => void;
+  onAddAddress: (contractAddress: string, chain: string) => void;
   selectedAddress?: string;
 }
 
@@ -21,10 +21,10 @@ export const AddressList: React.FC<IProps> = ({
 }) => {
   const [overlayOpen, setOverlayOpen] = useState<boolean>(false);
 
-  const onAdd = (contractAddress: string, chain: string) => {
-    console.log("CONTRACT ADDRESS:: ", contractAddress);
-    console.log("CHAIN:: ", chain);
-  };
+  // const onAdd = (contractAddress: string, chain: string) => {
+  //   console.log("CONTRACT ADDRESS:: ", contractAddress);
+  //   console.log("CHAIN:: ", chain);
+  // };
 
   return (
     <div className="address-list">
@@ -47,7 +47,7 @@ export const AddressList: React.FC<IProps> = ({
       {overlayOpen && (
         <Overlay>
           <AddAddress
-            onAddAddress={onAdd}
+            onAddAddress={onAddAddress}
             onClose={() => setOverlayOpen(false)}
           />
         </Overlay>

@@ -20,6 +20,7 @@ export const useAddAddress = (): IUseAddAddress => {
     address: string,
     chain: string
   ): Promise<IAddAddressResponse> => {
+    console.log("ACCESS TOKEN ::  ", accessToken);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/address`,
@@ -31,10 +32,12 @@ export const useAddAddress = (): IUseAddAddress => {
             address,
             chain,
           },
+          withCredentials: true,
         }
       );
       return response.data;
     } catch (e) {
+      console.log(e.response);
       if (e.response.status === 401 && accessToken) {
         localStorage.removeItem("identity");
       }
