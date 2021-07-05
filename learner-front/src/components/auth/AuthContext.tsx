@@ -51,6 +51,7 @@ export interface IAuthContext {
   ) => Promise<{ success: boolean } | { error: string }>;
   logoutHandler: () => void;
   profile: IProfile | null;
+  refreshProfile: () => void;
 }
 
 export const AuthContext = createContext<IAuthContext>({
@@ -63,6 +64,9 @@ export const AuthContext = createContext<IAuthContext>({
     throw new Error("Not implemented");
   },
   profile: null,
+  refreshProfile: () => {
+    throw new Error("Not implemented");
+  },
 });
 
 const getValuesFromProfile = (identity: IUserIdentity | null) => {
@@ -119,6 +123,7 @@ const AuthContextProvider: React.FC = ({ children }) => {
         ...getValuesFromProfile(profile),
         loginHandler,
         logoutHandler,
+        refreshProfile: fetchProfile,
       }}
     >
       {children}

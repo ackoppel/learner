@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "./addressList.css";
 import { IAddress } from "../../../components/auth/AuthContext";
 import { Address } from "../../../components/address/address";
 import { Box } from "../../../components/box/box";
+import { Overlay } from "../../../components/overlay/overlay";
+import { AddAddress } from "./addAddress/addAddress";
 
 interface IProps {
   addresses?: IAddress[];
@@ -17,6 +19,13 @@ export const AddressList: React.FC<IProps> = ({
   onAddAddress,
   selectedAddress,
 }) => {
+  const [overlayOpen, setOverlayOpen] = useState<boolean>(false);
+
+  const onAdd = (contractAddress: string, chain: string) => {
+    console.log("CONTRACT ADDRESS:: ", contractAddress);
+    console.log("CHAIN:: ", chain);
+  };
+
   return (
     <div className="address-list">
       <h3>Address List</h3>
@@ -29,9 +38,20 @@ export const AddressList: React.FC<IProps> = ({
             isSelected={address.contractAddress === selectedAddress}
           />
         ))}
-      <Box className="address-list-add" onClick={onAddAddress}>
+      <Box
+        className="address-list-add"
+        onClick={() => setOverlayOpen(!overlayOpen)}
+      >
         +
       </Box>
+      {overlayOpen && (
+        <Overlay>
+          <AddAddress
+            onAddAddress={onAdd}
+            onClose={() => setOverlayOpen(false)}
+          />
+        </Overlay>
+      )}
     </div>
   );
 };

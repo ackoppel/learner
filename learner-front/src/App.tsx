@@ -4,6 +4,8 @@ import { Redirect, Route, Switch } from "react-router";
 import { AuthContext } from "./components/auth/AuthContext";
 import { AppRoute } from "./components/route/appRoute";
 import { Loader } from "./components/loader/loader";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ScreenDashboard = React.lazy(
   () => import("./screens/dashboard/screenDashboard")
@@ -46,6 +48,17 @@ function App() {
           </Route>
         </Switch>
       </React.Suspense>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

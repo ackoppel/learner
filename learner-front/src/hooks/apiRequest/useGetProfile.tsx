@@ -1,17 +1,6 @@
 import axios from "axios";
 import { IUserIdentity } from "../../components/auth/AuthContext";
-
-const getIdentity = () => {
-  const identity = localStorage.getItem("identity");
-  if (identity) {
-    try {
-      return JSON.parse(identity) as IUserIdentity;
-    } catch (e) {
-      return { accessToken: null };
-    }
-  }
-  return { accessToken: null };
-};
+import { getIdentity } from "../helper/getIdentity";
 
 export const useGetProfile = () => {
   const { accessToken } = getIdentity();
@@ -28,7 +17,10 @@ export const useGetProfile = () => {
       );
       return result.data;
     } catch (e) {
-      localStorage.removeItem("identity");
+      console.log(e.response);
+      if (e.response.status === 401 && accessToken) {
+        localStorage.removeItem("identity");
+      }
       throw new Error();
     }
   };

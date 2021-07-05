@@ -4,19 +4,24 @@ import { Frame } from "../../components/frame/frame";
 import { AddressList } from "./addressList/addressList";
 import { BalanceList } from "./balanceList/balanceList";
 import "./screenDashboard.css";
+import { useMessage } from "../../hooks/helper/useMessage";
 
 const ScreenDashboard: React.FC = () => {
   const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(null);
-  const { profile } = useContext(AuthContext);
+  const { profile, refreshProfile } = useContext(AuthContext);
+  const { success, error } = useMessage();
 
   const onAddressSelect = (address: IAddress): void => {
     // todo :: add logic for handling screen size dependent actions
     setSelectedAddress(address);
   };
 
-  const onAddressDeSelect = () => {
-    setSelectedAddress(null);
-  };
+  const onAddAddress = async (
+    contractAddress: string,
+    chain: string
+  ): Promise<void> => {};
+
+  const onAddBalance = async (tokenAddress: string): Promise<void> => {};
 
   return (
     <Frame>

@@ -1,0 +1,27 @@
+.add-address {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+}
+
+.add-address input, .add-address select {
+    width: 100%;
+}
+
+.add-address input, .add-address select, .add-address button {
+    margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    .add-address {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 468px) {
+    .add-address {
+        width: 80%
+    }
+}

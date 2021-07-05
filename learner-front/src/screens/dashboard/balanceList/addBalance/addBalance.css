@@ -1,0 +1,27 @@
+.add-balance {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+}
+
+.add-balance input, .add-balance select {
+    width: 100%;
+}
+
+.add-balance input, .add-balance select, .add-balance button {
+    margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    .add-balance {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 468px) {
+    .add-balance {
+        width: 80%
+    }
+}
