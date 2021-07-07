@@ -22,7 +22,7 @@ export const usePostAddress = (): IUsePostAddress => {
       success(
         `${
           chain.charAt(0).toUpperCase() + chain.slice(1).toLowerCase()
-        } chain address ${address} added`
+        } chain address added`
       );
     } catch (e) {
       setHasError(true);

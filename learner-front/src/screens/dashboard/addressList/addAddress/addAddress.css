@@ -4,6 +4,9 @@
     justify-content: center;
     align-items: center;
     width: 40%;
+    background: linear-gradient(160deg, rgb(197, 151, 252) 0%, rgba(252, 181, 181, 0.5) 58%, rgba(157, 245, 237, 0.5) 100%);
+    padding: 10px 10px 0 10px;
+    border-radius: 8px;
 }
 
 .add-address input, .add-address select {

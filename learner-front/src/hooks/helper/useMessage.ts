@@ -7,7 +7,7 @@ interface IUseMessage {
 
 export const useMessage = (): IUseMessage => {
   const success = (message: string) => {
-    return toast.dark(message, {
+    return toast.success(message, {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,

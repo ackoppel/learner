@@ -7,6 +7,7 @@ import { usePostAddress } from "./usePostAddress";
 import "./screenDashboard.css";
 
 const ScreenDashboard: React.FC = () => {
+  const [overlayOpen, setOverlayOpen] = useState<boolean>(false);
   const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(null);
   const { profile, refreshProfile } = useContext(AuthContext);
   const { isLoading, hasError, postAddress } = usePostAddress();
@@ -25,6 +26,7 @@ const ScreenDashboard: React.FC = () => {
       return;
     }
     await refreshProfile();
+    setOverlayOpen(false);
   };
 
   const onAddBalance = async (tokenAddress: string): Promise<void> => {};
@@ -37,6 +39,8 @@ const ScreenDashboard: React.FC = () => {
           onSelect={onAddressSelect}
           selectedAddress={selectedAddress?.contractAddress}
           onAddAddress={onAddAddress}
+          overlayOpen={overlayOpen}
+          setOverlayOpen={setOverlayOpen}
         />
         <BalanceList selectedBalances={selectedAddress?.tokenBalances} />
       </div>

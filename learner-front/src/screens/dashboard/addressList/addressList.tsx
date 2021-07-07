@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./addressList.css";
 import { IAddress } from "../../../components/auth/AuthContext";
 import { Address } from "../../../components/address/address";
@@ -11,6 +11,8 @@ interface IProps {
   onSelect: (address: IAddress) => void;
   onAddAddress: (contractAddress: string, chain: string) => void;
   selectedAddress?: string;
+  overlayOpen: boolean;
+  setOverlayOpen: (value: boolean) => void;
 }
 
 export const AddressList: React.FC<IProps> = ({
@@ -18,14 +20,9 @@ export const AddressList: React.FC<IProps> = ({
   onSelect,
   onAddAddress,
   selectedAddress,
+  overlayOpen,
+  setOverlayOpen,
 }) => {
-  const [overlayOpen, setOverlayOpen] = useState<boolean>(false);
-
-  // const onAdd = (contractAddress: string, chain: string) => {
-  //   console.log("CONTRACT ADDRESS:: ", contractAddress);
-  //   console.log("CHAIN:: ", chain);
-  // };
-
   return (
     <div className="address-list">
       <h3>Address List</h3>
