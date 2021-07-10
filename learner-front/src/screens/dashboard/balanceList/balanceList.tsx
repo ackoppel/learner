@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./balanceList.css";
 import { ITokenBalance } from "../../../components/auth/AuthContext";
 import { Box } from "../../../components/box/box";
@@ -8,19 +8,17 @@ import { AddBalance } from "./addBalance/addBalance";
 
 interface IProps {
   selectedBalances?: ITokenBalance[] | null;
-  onAddBalance?: () => void;
+  overlayOpen: boolean;
+  setOverlayOpen: (value: boolean) => void;
+  onAddBalance: (tokenAddress: string) => void;
 }
 
 export const BalanceList: React.FC<IProps> = ({
   selectedBalances,
+  overlayOpen,
+  setOverlayOpen,
   onAddBalance,
 }) => {
-  const [overlayOpen, setOverlayOpen] = useState<boolean>(false);
-
-  const onAdd = (tokenAddress: string) => {
-    console.log("TOKEN ADDRESS:: ", tokenAddress);
-  };
-
   return (
     <div className="balance-list">
       <h3>Token Balances</h3>
@@ -42,7 +40,7 @@ export const BalanceList: React.FC<IProps> = ({
       {overlayOpen && (
         <Overlay>
           <AddBalance
-            onAddBalance={onAdd}
+            onAddBalance={onAddBalance}
             onClose={() => setOverlayOpen(false)}
           />
         </Overlay>
