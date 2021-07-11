@@ -4,14 +4,14 @@ import { Frame } from "../../components/frame/frame";
 import { AddressList } from "./addressList/addressList";
 import { BalanceList } from "./balanceList/balanceList";
 import { usePostAddress } from "./usePostAddress";
-import "./screenDashboard.css";
 import { usePostBalance } from "./usePostBalance";
+import "./screenDashboard.css";
 
 const ScreenDashboard: React.FC = () => {
   const [adrOverlayOpen, setAdrOverlayOpen] = useState<boolean>(false);
   const [balOverlayOpen, setBalOverlayOpen] = useState<boolean>(false);
   const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(null);
-  const { profile, refreshProfile } = useContext(AuthContext);
+  const { addresses, refreshProfile } = useContext(AuthContext);
   const {
     isLoading: isLoadingAddress,
     hasError: hasErrorAddress,
@@ -53,8 +53,13 @@ const ScreenDashboard: React.FC = () => {
       return;
     }
     await refreshProfile();
+    // console.log("dashboard");
     // todo :: fix showing the new balance instantly after post request
-    // setSelectedAddress(profile?.addresses.find((item) => item.contractAddress === selectedAddress.contractAddress));
+    // const updatedAddress = addresses.find(
+    //   (item) => item.contractAddress === selectedAddress.contractAddress
+    // );
+    // if (updatedAddress) setSelectedAddress(updatedAddress);
+    // console.log(updatedAddress);
     setBalOverlayOpen(false);
   };
 
@@ -62,7 +67,7 @@ const ScreenDashboard: React.FC = () => {
     <Frame>
       <div className="dashboard">
         <AddressList
-          addresses={profile?.addresses}
+          addresses={addresses}
           onSelect={onAddressSelect}
           selectedAddress={selectedAddress?.contractAddress}
           onAddAddress={onAddAddress}

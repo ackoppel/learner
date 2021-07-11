@@ -1,6 +1,6 @@
-import { IUserIdentity } from './AuthContext';
-import { useGetProfile } from '../../hooks/apiRequest/useGetProfile';
-import { useState } from 'react';
+import { IUserIdentity } from "./AuthContext";
+import { useGetProfile } from "../../hooks/apiRequest/useGetProfile";
+import { useState } from "react";
 
 export interface IUseFetchProfile {
   fetchProfile: () => void;

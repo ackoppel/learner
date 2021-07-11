@@ -51,6 +51,7 @@ export interface IAuthContext {
   ) => Promise<{ success: boolean } | { error: string }>;
   logoutHandler: () => void;
   profile: IProfile | null;
+  addresses: IAddress[];
   refreshProfile: () => void;
 }
 
@@ -64,6 +65,7 @@ export const AuthContext = createContext<IAuthContext>({
     throw new Error("Not implemented");
   },
   profile: null,
+  addresses: [],
   refreshProfile: () => {
     throw new Error("Not implemented");
   },
@@ -75,12 +77,14 @@ const getValuesFromProfile = (identity: IUserIdentity | null) => {
       isAuthenticated: false,
       token: null,
       profile: null,
+      addresses: [],
     };
   }
   return {
     isAuthenticated: true,
     token: identity.accessToken,
     profile: identity.profile,
+    addresses: identity.profile.addresses,
   };
 };
 

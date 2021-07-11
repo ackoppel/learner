@@ -7,7 +7,7 @@ import { Overlay } from "../../../components/overlay/overlay";
 import { AddAddress } from "./addAddress/addAddress";
 
 interface IProps {
-  addresses?: IAddress[];
+  addresses: IAddress[];
   onSelect: (address: IAddress) => void;
   onAddAddress: (contractAddress: string, chain: string) => void;
   selectedAddress?: string;
@@ -26,7 +26,7 @@ export const AddressList: React.FC<IProps> = ({
   return (
     <div className="address-list">
       <h3>Address List</h3>
-      {addresses &&
+      {addresses.length > 0 &&
         addresses.map((address, key) => (
           <Address
             address={address}
