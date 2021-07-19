@@ -1,8 +1,9 @@
 import axios from "axios";
 import { getIdentity } from "../helper/getIdentity";
+import { ChainType } from "../../core/chain";
 
 interface ICoin {
-  name: string;
+  name: ChainType;
   priceUsd: string;
   decimals: number;
   lastSync: Date;

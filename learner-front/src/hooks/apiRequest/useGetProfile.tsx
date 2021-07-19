@@ -17,7 +17,6 @@ export const useGetProfile = () => {
       );
       return result.data;
     } catch (e) {
-      console.log(e.response);
       if (e.response.status === 401 && accessToken) {
         localStorage.removeItem("identity");
       }

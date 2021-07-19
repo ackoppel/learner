@@ -47,7 +47,7 @@ export const useAddBalance = (): IUseAddBalance => {
       );
       return response.data;
     } catch (e) {
-      if (e.response.code === 401 && accessToken) {
+      if (e.response.status === 401 && accessToken) {
         localStorage.removeItem("identity");
       }
       throw new Error(e);

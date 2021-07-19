@@ -2,6 +2,7 @@ import React, { createContext, useEffect } from "react";
 import { useLogin } from "../../hooks/apiRequest/useLogin";
 import { useFetchProfile } from "./useFetchProfile";
 import { useHistory, useLocation } from "react-router-dom";
+import { ChainType } from "../../core/chain";
 
 export interface ITokenBalance {
   balanceId: string;
@@ -21,7 +22,7 @@ export interface IAddress {
   id: string;
   contractAddress: string;
   coinBalance: number;
-  coinName: string;
+  coinName: ChainType;
   coinPriceUsd: number;
   coinPriceLastSync: Date;
   totalBalanceUsd: number;

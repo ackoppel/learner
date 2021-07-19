@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ScreenDashboard = React.lazy(
-  () => import("./screens/dashboard/screenDashboard")
+  () => import("./screens/wallets/screenWallets")
 );
 const ScreenLogin = React.lazy(() => import("./screens/login/screenLogin"));
 const ScreenRegister = React.lazy(
@@ -27,24 +27,24 @@ function App() {
             isAllowed={!isAuthenticated}
             exact={true}
             component={ScreenLogin}
-            redirect="/dashboard"
+            redirect="/wallets"
           />
           <AppRoute
             path="/register"
             isAllowed={!isAuthenticated}
             exact={true}
             component={ScreenRegister}
-            redirect="/dashboard"
+            redirect="/wallets"
           />
           <AppRoute
-            path="/dashboard"
+            path="/wallets"
             isAllowed={isAuthenticated}
             exact={true}
             component={ScreenDashboard}
             redirect="/login"
           />
           <Route>
-            <Redirect to="/dashboard" />
+            <Redirect to="/wallets" />
           </Route>
         </Switch>
       </React.Suspense>

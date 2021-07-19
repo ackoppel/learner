@@ -1,4 +1,4 @@
-.dashboard {
+.wallet {
     display: flex;
     min-height: 100%;
     width: 70%;
@@ -6,7 +6,17 @@
     align-items: flex-start;
 }
 
-.dashboard h3 {
+.wallet h3 {
     color: #7d7979;
     font-size: 12px;
+}
+
+@media only screen and (max-width: 768px) {
+    .wallet {
+        width: 100%
+    }
+
+    .balance-list {
+        display: none;
+    }
 }

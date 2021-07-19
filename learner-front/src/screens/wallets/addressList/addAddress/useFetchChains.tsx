@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useGetCoins } from "../../../../hooks/apiRequest/useGetCoins";
+import { ChainType } from "../../../../core/chain";
 
 interface IUseFetchCoins {
-  chains: string[];
+  chains: ChainType[];
   fetchChains: () => void;
   hasError: boolean;
 }
 
 export const useFetchChains = (): IUseFetchCoins => {
-  const [chains, setChains] = useState<string[]>([]);
+  const [chains, setChains] = useState<ChainType[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
   const { getCoins } = useGetCoins();
 

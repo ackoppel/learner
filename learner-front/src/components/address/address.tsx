@@ -6,16 +6,13 @@ import classNames from "classnames";
 
 interface IProps {
   address: IAddress;
-  // todo :: remove optional tag
   onSelect: (address: IAddress) => void;
-  onDelete?: (tokenAddress: string, chain: string) => void;
   isSelected: boolean;
 }
 
 export const Address: React.FC<IProps> = ({
   address,
   onSelect,
-  onDelete,
   isSelected,
 }) => {
   return (

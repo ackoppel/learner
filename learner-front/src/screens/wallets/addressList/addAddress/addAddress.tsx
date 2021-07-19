@@ -4,15 +4,16 @@ import { FormButton } from "../../../../components/form/button/formButton";
 import { FormSelect } from "../../../../components/form/select/formSelect";
 import "./addAddress.css";
 import { useFetchChains } from "./useFetchChains";
+import { ChainType } from "../../../../core/chain";
 
 interface IProps {
-  onAddAddress: (contractAddress: string, chain: string) => void;
+  onAddAddress: (contractAddress: string, chain: ChainType) => void;
   onClose: () => void;
 }
 
 interface IAddAddressValues {
   contractAddress: string;
-  chain: string;
+  chain: ChainType | "";
 }
 
 export const AddAddress: React.FC<IProps> = ({ onAddAddress, onClose }) => {
@@ -32,7 +33,7 @@ export const AddAddress: React.FC<IProps> = ({ onAddAddress, onClose }) => {
       className="add-address"
       onSubmit={(e) => {
         e.preventDefault();
-        onAddAddress(values.contractAddress, values.chain);
+        onAddAddress(values.contractAddress, values.chain as ChainType);
       }}
     >
       <FormRow
@@ -47,7 +48,9 @@ export const AddAddress: React.FC<IProps> = ({ onAddAddress, onClose }) => {
       <FormSelect
         options={chains}
         label="chain"
-        onChange={(value) => setValues((prev) => ({ ...prev, chain: value }))}
+        onChange={(value) =>
+          setValues((prev) => ({ ...prev, chain: value as ChainType }))
+        }
       />
       <FormButton text="Add Address" type="submit" size="large" />
       <FormButton text="Cancel" type="button" size="large" onClick={onClose} />

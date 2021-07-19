@@ -5,9 +5,11 @@ import { AddressList } from "./addressList/addressList";
 import { BalanceList } from "./balanceList/balanceList";
 import { usePostAddress } from "./usePostAddress";
 import { usePostBalance } from "./usePostBalance";
-import "./screenDashboard.css";
+import "./screenWallets.css";
+import { ChainType } from "../../core/chain";
+import { useDeleteAddress } from "./useDeleteAddress";
 
-const ScreenDashboard: React.FC = () => {
+const ScreenWallets: React.FC = () => {
   const [adrOverlayOpen, setAdrOverlayOpen] = useState<boolean>(false);
   const [balOverlayOpen, setBalOverlayOpen] = useState<boolean>(false);
   const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(null);
@@ -22,21 +24,30 @@ const ScreenDashboard: React.FC = () => {
     hasError: hasErrorBalance,
     postBalance,
   } = usePostBalance();
+  const {
+    isLoading: isLoadingDeleteAddress,
+    hasError: hasErrorDeleteAddress,
+    deleteAddress,
+  } = useDeleteAddress();
 
   const onAddressSelect = (address: IAddress): void => {
     // todo :: add logic for handling screen size dependent actions
-    setSelectedAddress(address);
+    if (selectedAddress !== address) {
+      setSelectedAddress(address);
+    } else {
+      setSelectedAddress(null);
+    }
   };
 
   const onAddAddress = async (
     contractAddress: string,
-    chain: string
+    chain: ChainType
   ): Promise<void> => {
     await postAddress(contractAddress, chain);
     if (hasErrorAddress) {
       return;
     }
-    await refreshProfile();
+    refreshProfile();
     setAdrOverlayOpen(false);
   };
 
@@ -52,8 +63,8 @@ const ScreenDashboard: React.FC = () => {
     if (hasErrorBalance) {
       return;
     }
-    await refreshProfile();
-    // console.log("dashboard");
+    refreshProfile();
+    // console.log("wallets");
     // todo :: fix showing the new balance instantly after post request
     // const updatedAddress = addresses.find(
     //   (item) => item.contractAddress === selectedAddress.contractAddress
@@ -63,26 +74,36 @@ const ScreenDashboard: React.FC = () => {
     setBalOverlayOpen(false);
   };
 
+  const onRemoveAddress = async (
+    contractAddress: string,
+    chain: ChainType
+  ): Promise<void> => {
+    // todo :: add confirmation overlay
+    await deleteAddress(contractAddress, chain);
+    refreshProfile();
+  };
+
   return (
     <Frame>
-      <div className="dashboard">
+      <div className="wallet">
         <AddressList
           addresses={addresses}
           onSelect={onAddressSelect}
           selectedAddress={selectedAddress?.contractAddress}
           onAddAddress={onAddAddress}
+          onRemoveAddress={onRemoveAddress}
           overlayOpen={adrOverlayOpen}
           setOverlayOpen={setAdrOverlayOpen}
         />
         <BalanceList
           selectedBalances={selectedAddress?.tokenBalances}
+          onAddBalance={onAddBalance}
           overlayOpen={balOverlayOpen}
           setOverlayOpen={setBalOverlayOpen}
-          onAddBalance={onAddBalance}
         />
       </div>
     </Frame>
   );
 };
 
-export default ScreenDashboard;
+export default ScreenWallets;

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useAddAddress } from "../../hooks/apiRequest/useAddAddress";
 import { useMessage } from "../../hooks/helper/useMessage";
+import { ChainType } from "../../core/chain";
 
 interface IUsePostAddress {
   isLoading: boolean;
   hasError: boolean;
-  postAddress: (address: string, chain: string) => Promise<void>;
+  postAddress: (address: string, chain: ChainType) => Promise<void>;
 }
 
 export const usePostAddress = (): IUsePostAddress => {
@@ -14,7 +15,10 @@ export const usePostAddress = (): IUsePostAddress => {
   const { addAddress } = useAddAddress();
   const { success, error } = useMessage();
 
-  const postAddress = async (address: string, chain: string): Promise<void> => {
+  const postAddress = async (
+    address: string,
+    chain: ChainType
+  ): Promise<void> => {
     setHasError(false);
     setIsLoading(true);
     try {

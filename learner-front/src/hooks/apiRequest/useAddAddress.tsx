@@ -1,16 +1,20 @@
 import axios from "axios";
 import { getIdentity } from "../helper/getIdentity";
+import { ChainType } from "../../core/chain";
 
 interface IAddAddressResponse {
   id: string;
   contractAddress: string;
-  coin: string;
+  coin: ChainType;
   coinBalance: string;
   lastSync: Date;
 }
 
 interface IUseAddAddress {
-  addAddress: (address: string, chain: string) => Promise<IAddAddressResponse>;
+  addAddress: (
+    address: string,
+    chain: ChainType
+  ) => Promise<IAddAddressResponse>;
 }
 
 export const useAddAddress = (): IUseAddAddress => {
@@ -18,7 +22,7 @@ export const useAddAddress = (): IUseAddAddress => {
 
   const addAddress = async (
     address: string,
-    chain: string
+    chain: ChainType
   ): Promise<IAddAddressResponse> => {
     try {
       const response = await axios.post(
@@ -36,7 +40,6 @@ export const useAddAddress = (): IUseAddAddress => {
       );
       return response.data;
     } catch (e) {
-      // console.log(e.response);
       if (e.response.status === 401 && accessToken) {
         localStorage.removeItem("identity");
       }
