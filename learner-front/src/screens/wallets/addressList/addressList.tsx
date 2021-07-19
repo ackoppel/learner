@@ -5,8 +5,9 @@ import { Address } from "../../../components/address/address";
 import { Box } from "../../../components/box/box";
 import { Overlay } from "../../../components/overlay/overlay";
 import { AddAddress } from "./addAddress/addAddress";
-import { ActionBox } from "../../../components/actionBox/actionBox";
+import { ActionBox } from "../../../components/action/actionBox/actionBox";
 import { ChainType } from "../../../core/chain";
+import { ActionConfirm } from "../../../components/action/actionConfirm/actionConfirm";
 
 interface IProps {
   addresses: IAddress[];
@@ -29,6 +30,15 @@ export const AddressList: React.FC<IProps> = ({
 }) => {
   const [confirmOverlayOpen, setConfirmOverlayOpen] = useState<boolean>(false);
   // todo :: implement onDetailView and onDelete functionality
+  const removeAddress = () => {
+    const address = addresses.find((address) => {
+      return address.contractAddress === selectedAddress;
+    });
+    if (address) {
+      onRemoveAddress(address.contractAddress, address.coinName);
+    }
+  };
+
   return (
     <div className="address-list">
       <h3>Address List</h3>
@@ -51,7 +61,8 @@ export const AddressList: React.FC<IProps> = ({
               isVisible={address.contractAddress === selectedAddress}
               onDelete={() => {
                 // todo :: open confirmation overlay
-                onRemoveAddress(address.contractAddress, address.coinName);
+                // onRemoveAddress(address.contractAddress, address.coinName);
+                setConfirmOverlayOpen(true);
               }}
             />
           </div>
@@ -70,7 +81,16 @@ export const AddressList: React.FC<IProps> = ({
           />
         </Overlay>
       )}
-      {confirmOverlayOpen && <Overlay></Overlay>}
+      {confirmOverlayOpen && (
+        <Overlay>
+          <ActionConfirm
+            onConfirm={removeAddress}
+            onCancel={() => setConfirmOverlayOpen(false)}
+          >
+            Are you sure you want to remove this address?
+          </ActionConfirm>
+        </Overlay>
+      )}
     </div>
   );
 };

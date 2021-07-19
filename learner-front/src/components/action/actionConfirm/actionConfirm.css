@@ -1,0 +1,26 @@
+.action-box-confirm, .action-box-buttons, .action-box-buttons div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-box-confirm {
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    width: 50%;
+}
+
+.action-box-buttons div {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    color: white;
+    border-radius: 0 0 8px 8px;
+}
+
+.action-box-buttons div:hover {
+    background-color: #e21d1d;
+    border-radius: 0 0 8px 8px;
+}
