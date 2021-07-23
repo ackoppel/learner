@@ -1,6 +1,7 @@
 import axios from "axios";
-import { getIdentity } from "../helper/getIdentity";
+import { getIdentity } from "../../helper/getIdentity";
 import { ChainType } from "../../core/chain";
+import { getApiRequestHeaders } from "../../helper/getApiRequestHeaders";
 
 interface IAddAddressResponse {
   id: string;
@@ -32,10 +33,7 @@ export const useAddAddress = (): IUseAddAddress => {
           chain,
         },
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-type": "application/json",
-          },
+          headers: getApiRequestHeaders(accessToken),
         }
       );
       return response.data;

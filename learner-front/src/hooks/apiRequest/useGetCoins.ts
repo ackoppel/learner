@@ -1,6 +1,7 @@
 import axios from "axios";
-import { getIdentity } from "../helper/getIdentity";
+import { getIdentity } from "../../helper/getIdentity";
 import { ChainType } from "../../core/chain";
+import { getApiRequestHeaders } from "../../helper/getApiRequestHeaders";
 
 interface ICoin {
   name: ChainType;
@@ -21,9 +22,7 @@ export const useGetCoins = (): IUseGetCoins => {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/coin`,
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: getApiRequestHeaders(accessToken),
         }
       );
       return response.data;

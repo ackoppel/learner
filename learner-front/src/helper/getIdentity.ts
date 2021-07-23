@@ -1,4 +1,4 @@
-import { IUserIdentity } from "../../components/auth/AuthContext";
+import { IUserIdentity } from "../components/auth/AuthContext";
 
 export const getIdentity = (): { accessToken: null } | IUserIdentity => {
   const identity = localStorage.getItem("identity");

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./balanceList.css";
 import { ITokenBalance } from "../../../components/auth/AuthContext";
 import { Box } from "../../../components/box/box";
@@ -11,6 +11,7 @@ interface IProps {
   overlayOpen: boolean;
   setOverlayOpen: (value: boolean) => void;
   onAddBalance: (tokenAddress: string) => void;
+  onRemoveBalance: (tokenAddress: string) => void;
 }
 
 export const BalanceList: React.FC<IProps> = ({
@@ -18,7 +19,10 @@ export const BalanceList: React.FC<IProps> = ({
   overlayOpen,
   setOverlayOpen,
   onAddBalance,
+  onRemoveBalance,
 }) => {
+  const [confirmOverlayOpen, setConfirmOverlayOpen] = useState<boolean>(false);
+
   return (
     <div className="balance-list">
       <h3>Token Balances</h3>

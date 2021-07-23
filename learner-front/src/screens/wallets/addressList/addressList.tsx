@@ -8,12 +8,13 @@ import { AddAddress } from "./addAddress/addAddress";
 import { ActionBox } from "../../../components/action/actionBox/actionBox";
 import { ChainType } from "../../../core/chain";
 import { ActionConfirm } from "../../../components/action/actionConfirm/actionConfirm";
+import { AddressWrapper } from "./addressWrapper/addressWrapper";
 
 interface IProps {
   addresses: IAddress[];
   onSelect: (address: IAddress) => void;
   onAddAddress: (contractAddress: string, chain: ChainType) => void;
-  onRemoveAddress: (contractAddress: string, chain: ChainType) => void;
+  onRemoveAddress: () => void;
   selectedAddress?: string;
   overlayOpen: boolean;
   setOverlayOpen: (value: boolean) => void;
@@ -28,44 +29,26 @@ export const AddressList: React.FC<IProps> = ({
   overlayOpen,
   setOverlayOpen,
 }) => {
+  const [showActionBox, setShowActionBox] = useState<boolean>(false);
   const [confirmOverlayOpen, setConfirmOverlayOpen] = useState<boolean>(false);
-  // todo :: implement onDetailView and onDelete functionality
-  const removeAddress = () => {
-    const address = addresses.find((address) => {
-      return address.contractAddress === selectedAddress;
-    });
-    if (address) {
-      onRemoveAddress(address.contractAddress, address.coinName);
-    }
-  };
+  // todo :: implement onDetailView functionality
 
   return (
     <div className="address-list">
       <h3>Address List</h3>
       {addresses.length > 0 &&
         addresses.map((address, key) => (
-          <div key={key} className="address-wrapper">
+          <AddressWrapper
+            contractAddress={address.contractAddress}
+            onDelete={() => setConfirmOverlayOpen(true)}
+          >
             <Address
               address={address}
               onSelect={onSelect}
               key={key}
               isSelected={address.contractAddress === selectedAddress}
             />
-            <ActionBox
-              onDetailView={() =>
-                console.log(
-                  "VIEW CONTRACT ADDRESS ::: ",
-                  address.contractAddress
-                )
-              }
-              isVisible={address.contractAddress === selectedAddress}
-              onDelete={() => {
-                // todo :: open confirmation overlay
-                // onRemoveAddress(address.contractAddress, address.coinName);
-                setConfirmOverlayOpen(true);
-              }}
-            />
-          </div>
+          </AddressWrapper>
         ))}
       <Box
         className="address-list-add"
@@ -84,7 +67,7 @@ export const AddressList: React.FC<IProps> = ({
       {confirmOverlayOpen && (
         <Overlay>
           <ActionConfirm
-            onConfirm={removeAddress}
+            onConfirm={onRemoveAddress}
             onCancel={() => setConfirmOverlayOpen(false)}
           >
             Are you sure you want to remove this address?

@@ -32,3 +32,24 @@ export const ethPriceInUsdQuery = () => {
     }
   `;
 };
+
+export const tokenDailyAggregatedQuery = (address: string) => {
+  return `
+  {
+    tokenDayDatas(orderBy: date, orderDirection: asc,
+    where: {
+      token: "${address.toLowerCase()}"
+    }
+    ) {
+      id
+      date
+      priceUSD
+      totalLiquidityToken
+      totalLiquidityUSD
+      totalLiquidityETH
+      dailyVolumeETH
+      dailyVolumeToken
+      dailyVolumeUSD
+   }
+  }`;
+};

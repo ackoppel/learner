@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChainType } from "../../core/chain";
-import { useMessage } from "../../hooks/helper/useMessage";
+import { useMessage } from "../../helper/useMessage";
 import { useRemoveAddress } from "../../hooks/apiRequest/useRemoveAddress";
 
 interface IUseDeleteAddress {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMessage } from "../../hooks/helper/useMessage";
+import { useMessage } from "../../helper/useMessage";
 import { useAddBalance } from "../../hooks/apiRequest/useAddBalance";
 
 interface IUsePostBalance {

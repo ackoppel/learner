@@ -5,22 +5,28 @@
 }
 
 .action-box-confirm {
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
+    flex-direction: column;
     width: 50%;
 }
 
+.action-box-buttons {
+    display: flex;
+    width: 250px;
+    justify-content: space-evenly;
+    margin-top: 10px;
+}
+
 .action-box-buttons div {
-    width: 100%;
-    height: 100%;
+    width: 100px;
+    height: 30px;
+    font-size: 12px;
     background-color: black;
     color: white;
-    border-radius: 0 0 8px 8px;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 .action-box-buttons div:hover {
     background-color: #e21d1d;
-    border-radius: 0 0 8px 8px;
+    border-radius: 8px;
 }

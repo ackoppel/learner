@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAddAddress } from "../../hooks/apiRequest/useAddAddress";
-import { useMessage } from "../../hooks/helper/useMessage";
+import { useMessage } from "../../helper/useMessage";
 import { ChainType } from "../../core/chain";
 
 interface IUsePostAddress {

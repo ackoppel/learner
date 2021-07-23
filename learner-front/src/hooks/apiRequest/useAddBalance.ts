@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getIdentity } from "../helper/getIdentity";
+import { getIdentity } from "../../helper/getIdentity";
+import { getApiRequestHeaders } from "../../helper/getApiRequestHeaders";
 
 // todo :: move the interface into more generic location
 interface ITokenResponse {
@@ -39,10 +40,7 @@ export const useAddBalance = (): IUseAddBalance => {
           userAddress,
         },
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-type": "application/json",
-          },
+          headers: getApiRequestHeaders(accessToken),
         }
       );
       return response.data;

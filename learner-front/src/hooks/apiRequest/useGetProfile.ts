@@ -1,6 +1,7 @@
 import axios from "axios";
 import { IUserIdentity } from "../../components/auth/AuthContext";
-import { getIdentity } from "../helper/getIdentity";
+import { getIdentity } from "../../helper/getIdentity";
+import { getApiRequestHeaders } from "../../helper/getApiRequestHeaders";
 
 export const useGetProfile = () => {
   const { accessToken } = getIdentity();
@@ -9,10 +10,7 @@ export const useGetProfile = () => {
       const result = await axios.get(
         `${process.env.REACT_APP_API_URL}/profile`,
         {
-          headers: {
-            Authorization:
-              accessToken !== null ? `Bearer ${accessToken}` : null,
-          },
+          headers: getApiRequestHeaders(accessToken),
         }
       );
       return result.data;

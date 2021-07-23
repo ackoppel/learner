@@ -14,6 +14,9 @@ const ScreenLogin = React.lazy(() => import("./screens/login/screenLogin"));
 const ScreenRegister = React.lazy(
   () => import("./screens/register/screenRegister")
 );
+const ScreenSettings = React.lazy(
+  () => import("./screens/settings/screenSettings")
+);
 
 function App() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -43,6 +46,13 @@ function App() {
             component={ScreenDashboard}
             redirect="/login"
           />
+          <AppRoute
+            path="/settings"
+            isAllowed={isAuthenticated}
+            exact={true}
+            component={ScreenSettings}
+            redirect="/login"
+          />
           <Route>
             <Redirect to="/wallets" />
           </Route>
@@ -59,6 +69,7 @@ function App() {
         draggable
         pauseOnHover
       />
+      ;
     </div>
   );
 }

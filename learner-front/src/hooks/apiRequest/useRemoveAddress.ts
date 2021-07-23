@@ -1,6 +1,7 @@
 import axios from "axios";
-import { getIdentity } from "../helper/getIdentity";
+import { getIdentity } from "../../helper/getIdentity";
 import { ChainType } from "../../core/chain";
+import { getApiRequestHeaders } from "../../helper/getApiRequestHeaders";
 
 interface IUseRemoveAddress {
   removeAddress: (contractAddress: string, chain: ChainType) => Promise<void>;
@@ -17,9 +18,7 @@ export const useRemoveAddress = (): IUseRemoveAddress => {
       await axios.delete(
         `${process.env.REACT_APP_API_URL}/address?contract=${contractAddress}&chain=${chain}`,
         {
-          headers: {
-            Authorization: accessToken ? `Bearer ${accessToken}` : null,
-          },
+          headers: getApiRequestHeaders(accessToken),
         }
       );
     } catch (e) {

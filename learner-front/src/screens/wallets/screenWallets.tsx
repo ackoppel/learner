@@ -8,6 +8,7 @@ import { usePostBalance } from "./usePostBalance";
 import "./screenWallets.css";
 import { ChainType } from "../../core/chain";
 import { useDeleteAddress } from "./useDeleteAddress";
+import { useDeleteBalance } from "./useDeleteBalance";
 
 const ScreenWallets: React.FC = () => {
   const [adrOverlayOpen, setAdrOverlayOpen] = useState<boolean>(false);
@@ -29,6 +30,12 @@ const ScreenWallets: React.FC = () => {
     hasError: hasErrorDeleteAddress,
     deleteAddress,
   } = useDeleteAddress();
+
+  const {
+    isLoading: isLoadingDeleteBalance,
+    hasError: hasErrorDeleteBalance,
+    deleteBalance,
+  } = useDeleteBalance();
 
   const onAddressSelect = (address: IAddress): void => {
     // todo :: add logic for handling screen size dependent actions
@@ -64,22 +71,27 @@ const ScreenWallets: React.FC = () => {
       return;
     }
     refreshProfile();
-    // console.log("wallets");
     // todo :: fix showing the new balance instantly after post request
-    // const updatedAddress = addresses.find(
-    //   (item) => item.contractAddress === selectedAddress.contractAddress
-    // );
-    // if (updatedAddress) setSelectedAddress(updatedAddress);
-    // console.log(updatedAddress);
     setBalOverlayOpen(false);
   };
 
-  const onRemoveAddress = async (
-    contractAddress: string,
-    chain: ChainType
-  ): Promise<void> => {
-    // todo :: add confirmation overlay
-    await deleteAddress(contractAddress, chain);
+  const onRemoveAddress = async (): Promise<void> => {
+    if (!selectedAddress) return;
+    await deleteAddress(
+      selectedAddress.contractAddress,
+      selectedAddress.coinName
+    );
+    refreshProfile();
+  };
+
+  const onRemoveBalance = async (tokenAddress: string): Promise<void> => {
+    if (!selectedAddress) return;
+    await deleteBalance(
+      selectedAddress.contractAddress,
+      tokenAddress,
+      selectedAddress.coinName
+    );
+    // todo :: check removing addressWrapper from view after successful delete
     refreshProfile();
   };
 
@@ -98,6 +110,7 @@ const ScreenWallets: React.FC = () => {
         <BalanceList
           selectedBalances={selectedAddress?.tokenBalances}
           onAddBalance={onAddBalance}
+          onRemoveBalance={onRemoveBalance}
           overlayOpen={balOverlayOpen}
           setOverlayOpen={setBalOverlayOpen}
         />
