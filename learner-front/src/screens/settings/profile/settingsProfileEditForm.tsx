@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { FormRow } from "../../../components/form/row/formRow";
 import { AuthContext } from "../../../components/auth/AuthContext";
 import { FormButton } from "../../../components/form/button/formButton";
-import { Gender } from "../../../core/gender";
 
 export interface IFormValues {
   displayName: string;

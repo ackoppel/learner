@@ -24,10 +24,10 @@ const ScreenSettings: React.FC = () => {
     await updateProfile(values);
     if (!isLoading && !hasError) {
       refreshProfile();
+      setEditMode(false);
     }
   };
 
-  // todo :: edit settings screen
   return (
     <Frame>
       <div className="settings">

@@ -29,7 +29,6 @@ export const AddressList: React.FC<IProps> = ({
   overlayOpen,
   setOverlayOpen,
 }) => {
-  const [showActionBox, setShowActionBox] = useState<boolean>(false);
   const [confirmOverlayOpen, setConfirmOverlayOpen] = useState<boolean>(false);
   // todo :: implement onDetailView functionality
 
@@ -40,7 +39,10 @@ export const AddressList: React.FC<IProps> = ({
         addresses.map((address, key) => (
           <AddressWrapper
             contractAddress={address.contractAddress}
-            onDelete={() => setConfirmOverlayOpen(true)}
+            onDelete={() => {
+              onSelect(address);
+              setConfirmOverlayOpen(true);
+            }}
           >
             <Address
               address={address}

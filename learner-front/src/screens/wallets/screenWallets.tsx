@@ -91,7 +91,7 @@ const ScreenWallets: React.FC = () => {
       tokenAddress,
       selectedAddress.coinName
     );
-    // todo :: check removing addressWrapper from view after successful delete
+    // todo :: check removing address from view after successful delete
     refreshProfile();
   };
 
