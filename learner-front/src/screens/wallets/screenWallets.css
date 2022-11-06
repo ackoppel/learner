@@ -1,0 +1,22 @@
+.wallet {
+    display: flex;
+    min-height: 100%;
+    width: 70%;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.wallet h3 {
+    color: #7d7979;
+    font-size: 12px;
+}
+
+@media only screen and (max-width: 768px) {
+    .wallet {
+        width: 100%
+    }
+
+    .balance-list {
+        display: none;
+    }
+}

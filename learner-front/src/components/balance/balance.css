@@ -1,0 +1,23 @@
+.balance {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /*border-radius: 8px;*/
+    /*box-shadow: 0 0 5px black;*/
+}
+
+.balance-token-logo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 50%;
+}
+
+.balance-token-logo img {
+    height: 50px;
+    width: 50px;
+    /*border-radius: 50%;*/
+    margin-right: 40px;
+}

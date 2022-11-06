@@ -1,0 +1,32 @@
+.balance-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 45%;
+}
+
+.balance-list-select {
+    height: 128px;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #7d7979;
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+}
+
+.balance-list-add {
+    height: 128px;
+    background-color: #efeeee;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    color: #7d7979;
+}
+
+.balance-list-add:hover {
+    background-color: #eae7e7;
+}

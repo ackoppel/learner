@@ -1,0 +1,30 @@
+.add-balance {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    background: linear-gradient(160deg, rgb(197, 151, 252) 0%, rgba(252, 181, 181, 0.5) 58%, rgba(157, 245, 237, 0.5) 100%);
+    padding: 10px 10px 0 10px;
+    border-radius: 8px;
+}
+
+.add-balance input, .add-balance select {
+    width: 100%;
+}
+
+.add-balance input, .add-balance select, .add-balance button {
+    margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    .add-balance {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 468px) {
+    .add-balance {
+        width: 80%
+    }
+}

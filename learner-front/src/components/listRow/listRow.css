@@ -1,0 +1,16 @@
+.list-row {
+    display: flex;
+    align-items: flex-end;
+    margin: 8px 0;
+    font-weight: lighter;
+}
+
+.list-row p {
+    margin-left: 8px;
+}
+
+.list-row span {
+    color: #7d7979;
+    font-size: 12px;
+    margin-left: 5px;
+}
